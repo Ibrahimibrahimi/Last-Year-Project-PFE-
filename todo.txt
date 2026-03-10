@@ -1,0 +1,4 @@
+
+- create the lesson data inside 'app/data/'  as json file , each one represents a language
+- apply analytics in json files (count all lessons for a language , ...)
+
