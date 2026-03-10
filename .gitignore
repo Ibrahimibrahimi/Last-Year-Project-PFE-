@@ -4,3 +4,5 @@ env/
 venv
 app/auth/__pycache__/
 app/logs/main.log
+__pycache__/ 
+*.pyc
