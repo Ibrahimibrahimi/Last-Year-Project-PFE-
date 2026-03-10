@@ -6,18 +6,21 @@ from flask import render_template
 @main_bp.route("/home")
 @login_required
 def home():
-    
-    return render_template("home.html")
+
+    return render_template("index.html")
+
 
 @main_bp.route("/courses")
 @login_required
 def courses():
     return render_template("courses.html")
 
+
 @main_bp.route("/dashboard")
 @login_required
 def dashboard():
     return render_template("dashboard.html")
+
 
 @main_bp.route("/about")
 def about():
@@ -26,4 +29,4 @@ def about():
 
 @main_bp.route("/course/dd")
 def course_detail():
-    return render_template("course.html",)
+    return render_template("course.html")
