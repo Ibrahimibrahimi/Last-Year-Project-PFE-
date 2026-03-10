@@ -22,7 +22,7 @@ def login() :
         if  not check_password_hash(user.password,password):
             return render_template("/auth/login.html",password="Wrong password")
         login_user(user) # use the primary key
-        return redirect(url_for("home"))
+        return redirect(url_for("main.home"))
     return render_template("/auth/login.html")
 
 
