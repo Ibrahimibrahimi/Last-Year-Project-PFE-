@@ -2,5 +2,4 @@ app/logs
 env/
 .env
 venv
-
-
+*.pyc
