@@ -16,12 +16,12 @@ def login() :
         
         # check if correct
         user = User.query.filter_by(email=Email).first()
-        if not user : # NOT EXIST = NONE => REDIRECT
+        if user is None : # NOT EXIST = NONE => REDIRECT
             logout_user()
             return render_template("/auth/login.html",email="Email not found")
         # verify infos
-        if  check_password_hash(user.password,password):
-            return render_template("login.html",password="Wrong password")
+        if  not check_password_hash(user.password,password):
+            return render_template("/auth/login.html",password="Wrong password")
         login_user(user) # use the primary key
         return f"==> LOGIN {Email} : {password}"
     return render_template("/auth/login.html")
@@ -31,11 +31,10 @@ def login() :
 def register():
     if request.method == "POST" :
         # get data from form
-        username = request.form.get("username")
+        username = request.form.get("firstname") + " " + request.form.get("lastname") 
         password = request.form.get("password")
         email = request.form.get("email")
         birth = request.form.get("birth")
-        bio = request.form.get("bio")
         
         # if there is no user with same email
         
@@ -43,19 +42,18 @@ def register():
         
         if  user :
             # return the page register.html but with error that user already exists + show option of login
-            return render_template("register.html",email_error="Email already exists")
+            return render_template("/auth/register.html",email="Email already exists")
         # create
         db.session.add(User(email=email,
                             password= generate_password_hash(password),
                             username=username,
-                            birth=datetime.strptime(birth,"%Y-%m-%d").date(),
-                            bio = bio
+                            birth=datetime.strptime(birth,"%Y-%m-%d").date()
                             ))
         # log that a new user created
         current_app.logger.info(f"User created successfully email={email}")
         db.session.commit()
         print("="*50,"USER CREATED") # better to use logs
-        return render_template("login.html",created="User created successfully , log in to show your profile")
+        return render_template("/auth/login.html")
     return render_template("/auth/register.html")
 
 
