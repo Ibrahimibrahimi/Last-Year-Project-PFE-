@@ -209,3 +209,8 @@ input::placeholder { color: #AACFCB; }
 }
 
 .notice strong { color: var(--mint); }
+
+
+span.error {
+  color : rgb(223, 126, 126);
+}
