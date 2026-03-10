@@ -1,53 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Sign Up</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/student.css') }}">
 </head>
+
 <body>
-<div class="card wide">
-  <div class="badge">Student Portal</div>
-  <h1>Create account</h1>
-  <p class="sub">Join your school's learning platform today.</p>
+  <div class="card wide">
+    <div class="badge">Student Portal</div>
+    <h1>Create account</h1>
+    <p class="sub">Join your school's learning platform today.</p>
 
-  {% if error %}
-  <div class="error-box">⚠ {{ error }}</div>
-  {% endif %}
+    {% if error %}
+    <div class="error-box">⚠ {{ error }}</div>
+    {% endif %}
 
-  <form method="POST" action="{{ url_for('auth.register') }}">
-    <div class="row">
+    <form method="POST" action="{{ url_for('auth.register') }}">
+      <div class="row">
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" name="firstname" placeholder="Aya" required>
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <input type="text" name="lastname" placeholder="Benali" required>
+        </div>
+      </div>
+
       <div class="field">
-        <label>First Name</label>
-        <input type="text" name="first_name" placeholder="Aya" required>
+        <label>School Email</label>
+        <input type="email" name="email" placeholder="example@school.edu" required>
+        <span class="error">{{email}}</span>
       </div>
       <div class="field">
-        <label>Last Name</label>
-        <input type="text" name="last_name" placeholder="Benali" required>
+        <label>Date of Birth</label>
+        <input type="date" name="birth" required>
       </div>
-    </div>
 
-    <div class="field">
-      <label>School Email</label>
-      <input type="email" name="email" placeholder="example@school.edu" required>
-      <span class="error">{{email}}</span>
-    </div>
-    <div class="field">
-      <label>Date of Birth</label>
-      <input type="date" name="birth" required>
-    </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Min. 8 characters" required>
+      </div>
 
-    <div class="field">
-      <label>Password</label>
-      <input type="password" name="password" placeholder="Min. 8 characters" required>
+      <button class="btn" type="submit">Create Account →</button>
+    </form>
+    <div class="footer" style="margin-top: 16px;">
+      Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>
     </div>
-
-    <button class="btn" type="submit">Create Account →</button>
-  </form>
-  <div class="footer" style="margin-top: 16px;">
-    Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>
   </div>
-</div>
 </body>
+
 </html>
