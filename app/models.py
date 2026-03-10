@@ -8,8 +8,8 @@ class User(db.Model) :
     
     # attributes
     id = db.Column(db.Integer,autoincrement = True,primary_key=True)
-    username = db.Column(db.String(30),nullable=False)
     email = db.Column(db.String(30),unique=True,nullable=False)
+    username = db.Column(db.String(30),nullable=False)
     password = db.Column(db.String(300),nullable=False) # because stored as hash
     birth = db.Column(db.Date , default=date(2006,4,10))
     bio = db.Column(db.String(100) , default="Hi i'm learning")
