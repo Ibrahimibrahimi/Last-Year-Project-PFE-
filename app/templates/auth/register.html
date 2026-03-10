@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Sign Up</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/student.css') }}">
+</head>
+<body>
+<div class="card wide">
+  <div class="badge">Student Portal</div>
+  <h1>Create account</h1>
+  <p class="sub">Join your school's learning platform today.</p>
+
+  {% if error %}
+  <div class="error-box">⚠ {{ error }}</div>
+  {% endif %}
+
+  <form method="POST" action="{{ url_for('auth.register') }}">
+    <div class="row">
+      <div class="field">
+        <label>First Name</label>
+        <input type="text" name="first_name" placeholder="Aya" required>
+      </div>
+      <div class="field">
+        <label>Last Name</label>
+        <input type="text" name="last_name" placeholder="Benali" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>School Email</label>
+      <input type="email" name="email" placeholder="example@school.edu" required>
+    </div>
+
+    <div class="field">
+      <label>Student ID</label>
+      <input type="text" name="student_id" placeholder="s202401234" required>
+    </div>
+
+    <div class="field">
+      <label>Grade / Level</label>
+      <select name="grade">
+        <option value="">Select your grade</option>
+        <option>1st Year</option>
+        <option>2nd Year</option>
+        <option>3rd Year</option>
+        <option>4th Year</option>
+        <option>5th Year</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Min. 8 characters" required>
+    </div>
+
+    <button class="btn" type="submit">Create Account →</button>
+  </form>
+
+
+  <div class="footer" style="margin-top: 16px;">
+    Already have an account? <a href="{{ url_for('auth.register') }}">Sign in</a>
+  </div>
+</div>
+</body>
+</html>
