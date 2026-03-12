@@ -1,5 +1,5 @@
 app/logs
-env/
+.env
 venv
 app/auth/__pycache__/
 app/logs/main.log
