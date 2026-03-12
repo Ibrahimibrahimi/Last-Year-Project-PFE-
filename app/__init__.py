@@ -11,7 +11,7 @@ import hashlib
 load_dotenv()
 
 
-def createApp():
+def create_app():
     app = Flask(__name__)
     
     # == configurer app settings ==
