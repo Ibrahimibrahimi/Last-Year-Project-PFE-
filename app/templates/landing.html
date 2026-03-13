@@ -4,1268 +4,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercism – Get really good at programming</title>
+    <title>CodeLearn — Master Any Language, Free Forever</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/landing.css')}}">
     <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap"
         rel="stylesheet">
-    <style>
-        :root {
-            --purple-dark: #130b43;
-            --purple-main: #2e1a7e;
-            --purple-mid: #5c4fc7;
-            --purple-accent: #604FCD;
-            --teal: #00c4b3;
-            --yellow: #f7e94b;
-            --bg-light: #f5f5fb;
-            --bg-white: #ffffff;
-            --text-dark: #160d35;
-            --text-mid: #3b3559;
-            --text-muted: #5e5a7a;
-            --border-light: #e0ddf5;
-        }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--bg-white);
-            color: var(--text-dark);
-            overflow-x: hidden;
-        }
-
-        /* ===== NAVBAR ===== */
-        nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 48px;
-            height: 64px;
-            background: var(--bg-white);
-            border-bottom: 3px solid var(--purple-dark);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .logo-bracket {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border: 2.5px solid var(--purple-dark);
-            border-radius: 8px;
-            font-family: 'Source Code Pro', monospace;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--purple-dark);
-            letter-spacing: -1px;
-        }
-
-        .logo-text {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 36px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 500;
-            font-size: 15px;
-        }
-
-        .nav-links a:hover {
-            color: var(--purple-accent);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-signup {
-            background: var(--purple-accent);
-            color: white;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .btn-login {
-            background: transparent;
-            color: var(--purple-accent);
-            border: 2px solid var(--purple-accent);
-            padding: 9px 22px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        /* ===== HERO ===== */
-        .hero {
-            background: var(--bg-light);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpolygon points='30,2 58,16 58,44 30,58 2,44 2,16' fill='none' stroke='%23e0ddf5' stroke-width='1'/%3E%3C/svg%3E");
-            background-size: 80px 70px;
-            padding: 72px 48px 80px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
-            align-items: center;
-            min-height: 520px;
-        }
-
-        .hero-title {
-            font-size: 52px;
-            font-weight: 800;
-            line-height: 1.1;
-            color: var(--text-dark);
-            margin-bottom: 20px;
-        }
-
-        .hero-title .highlight {
-            background: var(--yellow);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-style: italic;
-        }
-
-        .hero-desc {
-            font-size: 17px;
-            color: var(--text-mid);
-            line-height: 1.7;
-            max-width: 520px;
-            margin-bottom: 32px;
-        }
-
-        .hero-desc em {
-            font-style: italic;
-        }
-
-        .hero-desc strong {
-            font-weight: 700;
-            text-decoration: underline;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 36px;
-        }
-
-        .btn-primary {
-            background: var(--purple-accent);
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--purple-accent);
-            border: 2px solid var(--purple-accent);
-            padding: 14px 32px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .hero-notice {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border: 2px solid var(--purple-accent);
-            border-radius: 10px;
-            padding: 14px 18px;
-            max-width: 520px;
-            background: white;
-        }
-
-        .hero-notice-bracket {
-            width: 28px;
-            height: 28px;
-            border: 2px solid var(--text-dark);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Source Code Pro', monospace;
-            font-size: 11px;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .hero-notice-name {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-dark);
-            white-space: nowrap;
-        }
-
-        .hero-notice-text {
-            font-size: 13px;
-            color: var(--text-mid);
-            flex: 1;
-        }
-
-        .hero-notice-link {
-            color: var(--purple-accent);
-            font-weight: 700;
-            font-size: 13px;
-            text-decoration: none;
-            flex-shrink: 0;
-        }
-
-        .hero-notice-close {
-            width: 32px;
-            height: 32px;
-            border: 2px solid var(--purple-accent);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--purple-accent);
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        /* ── Hero visual: people illustration + lang badges ── */
-        .hero-visual {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* People illustration placeholder */
-        .people-illustration {
-            width: 400px;
-            height: 280px;
-            border-radius: 16px;
-            overflow: hidden;
-            position: relative;
-            background: #d6f0ff;
-            /* light-blue fallback while empty */
-        }
-
-        .people-illustration img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-        /* Hero language badges row */
-        .hero-lang-badges {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .hero-lang-badge {
-            width: 58px;
-            height: 58px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: var(--bg-light);
-            /* fallback */
-            border: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero-lang-badge img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-        /* ===== WAVE DIVIDER ===== */
-        .wave-div {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            align-items: center;
-            margin: 10px 0;
-        }
-
-        .wave-div span {
-            display: inline-block;
-            width: 10px;
-            height: 2px;
-            background: var(--purple-main);
-            border-radius: 2px;
-        }
-
-        .wave-div span:nth-child(odd) {
-            margin-top: 5px;
-        }
-
-        /* ===== LANGUAGES SECTION ===== */
-        .languages-section {
-            padding: 80px 48px;
-            background: var(--bg-white);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Decorative corner elements */
-        .deco-diamond {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, #00c4b3, #00e5d5);
-            border-radius: 3px;
-            transform: rotate(45deg);
-            top: 70px;
-            left: 90px;
-        }
-
-        .deco-square {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            background: #f7e94b;
-            border: 2px solid #d4c200;
-            top: 65px;
-            right: 80px;
-        }
-
-        .deco-triangle {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 14px solid #f7e94b;
-            bottom: 70px;
-            right: 180px;
-        }
-
-        .section-title {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-bottom: 16px;
-            line-height: 1.2;
-        }
-
-        .section-title .ul {
-            text-decoration: underline;
-            text-underline-offset: 4px;
-        }
-
-        /* ── Language card grid ── */
-        .lang-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 32px 24px;
-            margin: 48px auto 0;
-            max-width: 960px;
-        }
-
-        .lang-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Hexagonal clip for language icon image */
-        .lang-hex-wrap {
-            width: 80px;
-            height: 80px;
-            clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
-            background: var(--bg-light);
-            /* shown while image loads / empty */
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .lang-hex-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .lang-name {
-            font-family: 'Source Code Pro', monospace;
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--text-dark);
-        }
-
-        .lang-students {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .see-all-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 48px;
-            padding: 14px 28px;
-            border-radius: 50px;
-            border: 2px solid var(--border-light);
-            background: var(--bg-light);
-            color: var(--text-mid);
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            font-family: inherit;
-        }
-
-        .see-all-btn:hover {
-            border-color: var(--purple-accent);
-            color: var(--purple-accent);
-        }
-
-        /* ===== FEATURES ===== */
-        .features-section {
-            padding: 80px 48px 0;
-            background: var(--bg-white);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 48px;
-            margin-bottom: 64px;
-        }
-
-        .feature-icon-box {
-            width: 52px;
-            height: 52px;
-            border: 2px solid var(--purple-accent);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
-
-        .feature-title {
-            font-size: 17px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 10px;
-        }
-
-        .feature-desc {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-
-        /* ===== MENTORING ===== */
-        .mentoring-section {
-            padding: 40px 48px 80px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-            background: var(--bg-white);
-        }
-
-        /* Mentoring illustration placeholder */
-        .mentor-illustration {
-            width: 100%;
-            max-width: 400px;
-            height: 300px;
-            border-radius: 16px;
-            overflow: hidden;
-            background: #f0f0f8;
-            /* fallback while empty */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .mentor-illustration img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-        .mentoring-title {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--text-dark);
-            line-height: 1.2;
-            margin-bottom: 12px;
-        }
-
-        .mentoring-title .ul-free {
-            text-decoration: underline;
-            text-underline-offset: 4px;
-        }
-
-        .mentoring-desc {
-            font-size: 16px;
-            color: var(--text-muted);
-            line-height: 1.7;
-            max-width: 480px;
-        }
-
-        .squiggle {
-            display: flex;
-            gap: 3px;
-            align-items: center;
-            margin: 14px 0;
-        }
-
-        .squiggle span {
-            display: inline-block;
-            width: 10px;
-            height: 2px;
-            background: var(--purple-main);
-            border-radius: 2px;
-        }
-
-        .squiggle span:nth-child(odd) {
-            margin-top: 4px;
-        }
-
-        .squiggle span:nth-child(even) {
-            margin-bottom: 4px;
-        }
-
-        /* ===== WHY MENTORING ===== */
-        .why-section {
-            padding: 72px 48px;
-            background: var(--bg-light);
-            text-align: center;
-        }
-
-        .why-title {
-            font-size: 34px;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-bottom: 10px;
-        }
-
-        .why-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 48px;
-            margin-top: 48px;
-            text-align: left;
-        }
-
-        .why-icon-box {
-            width: 52px;
-            height: 52px;
-            margin-bottom: 16px;
-        }
-
-        .why-card-title {
-            font-size: 17px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 12px;
-        }
-
-        .why-card-desc {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.75;
-        }
-
-        /* ===== CTA BANNER ===== */
-        .cta-banner {
-            background: #1e1464;
-            padding: 40px 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 32px;
-        }
-
-        .cta-logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .cta-logo-bracket {
-            width: 28px;
-            height: 28px;
-            border: 2px solid white;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Source Code Pro', monospace;
-            font-size: 11px;
-            font-weight: 600;
-            color: white;
-        }
-
-        .cta-logo-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .cta-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 8px;
-        }
-
-        .cta-desc {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 480px;
-            line-height: 1.6;
-        }
-
-        .cta-actions {
-            display: flex;
-            gap: 16px;
-            flex-shrink: 0;
-        }
-
-        .cta-btn-primary {
-            background: var(--purple-accent);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-            white-space: nowrap;
-        }
-
-        .cta-btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-            padding: 12px 28px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-            white-space: nowrap;
-        }
-
-        /* ===== TRACKS ===== */
-        .tracks-section {
-            background: #130b3d;
-            padding: 64px;
-            color: white;
-        }
-
-        .tracks-layout {
-            display: grid;
-            grid-template-columns: 1fr 220px;
-            gap: 48px;
-            align-items: start;
-        }
-
-        .tracks-title {
-            font-size: 26px;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 8px;
-        }
-
-        .tracks-wave {
-            display: flex;
-            gap: 3px;
-            margin-bottom: 40px;
-        }
-
-        .tracks-wave span {
-            display: block;
-            width: 10px;
-            height: 2px;
-            background: var(--teal);
-            border-radius: 2px;
-        }
-
-        .tracks-wave span:nth-child(odd) {
-            margin-top: 3px;
-        }
-
-        .tracks-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px 0;
-        }
-
-        .tracks-grid a {
-            color: rgba(255, 255, 255, 0.75);
-            text-decoration: none;
-            font-size: 14px;
-            padding: 3px 0;
-            display: block;
-        }
-
-        .tracks-grid a:hover {
-            color: white;
-        }
-
-        .tracks-sidebar {
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 24px;
-        }
-
-        .tracks-sidebar-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .tracks-sidebar-text {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.65);
-            line-height: 1.6;
-        }
-
-        .tracks-sidebar-link {
-            color: var(--yellow);
-            font-weight: 600;
-        }
-
-        /* ===== FOOTER ===== */
-        footer {
-            background: #130b3d;
-            padding: 56px 64px 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 32px;
-            margin-bottom: 48px;
-        }
-
-        .footer-col-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 14px;
-        }
-
-        .footer-wave {
-            display: flex;
-            gap: 3px;
-            margin-bottom: 16px;
-        }
-
-        .footer-wave span {
-            display: block;
-            width: 8px;
-            height: 2px;
-            background: var(--teal);
-            border-radius: 2px;
-        }
-
-        .footer-wave span:nth-child(odd) {
-            margin-top: 3px;
-        }
-
-        .footer-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.65);
-            text-decoration: none;
-            font-size: 13.5px;
-        }
-
-        .footer-links a:hover {
-            color: white;
-        }
-
-        .footer-socials {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 8px;
-        }
-
-        .social-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-        }
-
-        .social-twitter {
-            background: #1da1f2;
-        }
-
-        .social-facebook {
-            background: #1877f2;
-        }
-
-        .social-github {
-            background: #555;
-        }
-    </style>
 </head>
 
 <body>
 
-    <!-- ======================== NAVBAR ======================== -->
-    <nav>
+    <nav class="navbar" id="navbar">
         <a href="#" class="nav-logo">
-            <div class="logo-bracket">{-}</div>
-            <span class="logo-text">exercism</span>
+            <div class="nav-logo-mark" style="background:var(--lime);">&lt;/&gt;</div>
+            <span class="nav-logo-text">Code<span>Learn</span></span>
         </a>
-        <ul class="nav-links">
-            <li><a href="#">Learn</a></li>
-            <li><a href="#">Discover</a></li>
-            <li><a href="#">Contribute</a></li>
-            <li><a href="#">More</a></li>
-        </ul>
+
+        <div class="nav-links">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#languages" class="nav-link">Languages</a>
+            <a href="#curriculum" class="nav-link">Curriculum</a>
+            <a href="#about" class="nav-link">About</a>
+        </div>
+
         <div class="nav-actions">
-            <button class="btn-signup">Sign up</button>
-            <button class="btn-login">Log in</button>
+            <button class="btn-ghost-nav" onclick="window.location='/login'">Log In</button>
+            <button class="btn-lime" onclick="window.location='/register'">Get Started Free →</button>
         </div>
     </nav>
 
-    <!-- ======================== HERO ======================== -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Get <span class="highlight">really</span> good at<br>programming.</h1>
-            <p class="hero-desc">
-                Develop fluency in <em>82 programming languages</em> with our unique blend of
-                learning, practice and mentoring. Exercism is fun, effective and
-                <strong>100% free, forever.</strong>
-            </p>
-            <div class="hero-buttons">
-                <button class="btn-primary">Sign up for free</button>
-                <button class="btn-secondary">Explore languages</button>
-            </div>
-            <div class="hero-notice">
-                <div class="hero-notice-bracket">{-}</div>
-                <span class="hero-notice-name">exercism</span>
-                <span class="hero-notice-text">is an independent, community funded, not-for-profit organisation.</span>
-                <a href="#" class="hero-notice-link">Learn more</a>
-                <div class="hero-notice-close">✕</div>
-            </div>
-        </div>
+    <section style="position:relative;overflow:hidden;">
+        <div class="hero-glow"></div>
+        <div class="hero-glow-2"></div>
 
-        <div class="hero-visual">
+        <div class="hero">
 
-            <!--
-      ┌─────────────────────────────────────────┐
-      │  REPLACE src="" with your illustration  │
-      │  of the three people at the laptop.     │
-      │  Recommended: PNG or SVG, ~800×560px    │
-      └─────────────────────────────────────────┘
-    -->
-            <div class="people-illustration">
-                <img src="" alt="Three diverse programmers smiling and working together at a laptop">
-            </div>
+            <div class="hero-left">
 
-            <!-- Hero badge row — replace each src="" with your language icon -->
-            <div class="hero-lang-badges">
-                <div class="hero-lang-badge"><img src="" alt="C# icon"></div>
-                <div class="hero-lang-badge"><img src="" alt="Java icon"></div>
-                <div class="hero-lang-badge"><img src="" alt="Python icon"></div>
-                <div class="hero-lang-badge"><img src="" alt="Ruby icon"></div>
-                <div class="hero-lang-badge"><img src="" alt="Elixir icon"></div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- ======================== LANGUAGES SECTION ======================== -->
-    <section class="languages-section">
-        <div class="deco-diamond"></div>
-        <div class="deco-square"></div>
-        <div class="deco-triangle"></div>
-
-        <!-- Section heading hex icon -->
-        <svg width="64" height="64" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"
-            style="margin: 0 auto 24px; display: block;">
-            <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#160d35" stroke-width="3" />
-            <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                font-family="Source Code Pro,monospace" font-size="22" font-weight="700" fill="#160d35">#</text>
-        </svg>
-
-        <h2 class="section-title">Explore and <span class="ul">get fluent</span> in<br>82 programming languages</h2>
-        <div class="wave-div"><span></span><span></span><span></span><span></span><span></span></div>
-
-        <!--
-  ╔══════════════════════════════════════════════════════════════════════════╗
-  ║  JINJA2 — pass a list called `languages` to the template.               ║
-  ║  Each item should have: name, students, icon_url                        ║
-  ║                                                                         ║
-  ║  Example Python / Flask context:                                        ║
-  ║                                                                         ║
-  ║  languages = [                                                           ║
-  ║    { "name": "Python",     "students": "693,993", "icon_url": "..." },  ║
-  ║    { "name": "JavaScript", "students": "463,197", "icon_url": "..." },  ║
-  ║    ...                                                                  ║
-  ║  ]                                                                      ║
-  ╚══════════════════════════════════════════════════════════════════════════╝
-  -->
-        <div class="lang-grid">
-            {% for lang in languages %}
-            <div class="lang-card">
-                <!--
-        Hexagonal clip applied via CSS class .lang-hex-wrap
-        Replace icon_url with your image path / URL variable
-      -->
-                <div class="lang-hex-wrap">
-                    <img src="{{ lang.icon_url }}" alt="{{ lang.name }} icon">
+                <div class="hero-badge">
+                    <span class="hero-badge-dot"></span>
+                    Now with 120+ free courses
                 </div>
-                <div class="lang-name">{{ lang.name }}</div>
-                <div class="lang-students">{{ lang.students }} students</div>
-            </div>
-            {% endfor %}
-        </div>
 
-        <a href="#" class="see-all-btn">See all 82 Language Tracks →</a>
-    </section>
+                <h1 class="hero-title">
+                    Master Code.<br>
+                    <span class="italic">For Free.</span><br>
+                    <span class="stroke">Forever.</span>
+                </h1>
 
-    <!-- ======================== FEATURES SECTION ======================== -->
-    <section class="features-section">
-        <div class="features-grid">
-            <div class="feature-item">
-                <div class="feature-icon-box">
-                    <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="1" y="1" width="26" height="20" rx="4" stroke="#604FCD" stroke-width="2" />
-                        <path d="M6 7L10 11L6 15" stroke="#604FCD" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                        <line x1="13" y1="15" x2="21" y2="15" stroke="#604FCD" stroke-width="2"
-                            stroke-linecap="round" />
-                    </svg>
+                <p class="hero-sub">
+                    CodeLearn is the <strong>open educational platform</strong> where students master Python,
+                    JavaScript, Java and more — through structured lessons, real exercises, and a gamified experience.
+                    <strong>No paywalls. Ever.</strong>
+                </p>
+
+                <div class="hero-actions">
+                    <button class="btn-hero btn-hero-primary" onclick="window.location='/register'">
+                        Start Learning Free
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+
+                    <button class="btn-hero btn-hero-secondary" onclick="window.location='/courses'">
+                        Browse Courses
+                    </button>
                 </div>
-                <h3 class="feature-title">Write code locally, in your own space</h3>
-                <p class="feature-desc">Exercism is primarily built as a CLI-first tool. Download and submit exercises
-                    right from your terminal.</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon-box">
-                    <svg width="30" height="22" viewBox="0 0 30 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="1" y="1" width="28" height="20" rx="4" stroke="#604FCD" stroke-width="2" />
-                        <path d="M10 8L7 11L10 14" stroke="#604FCD" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                        <path d="M20 8L23 11L20 14" stroke="#604FCD" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                        <line x1="16" y1="7" x2="14" y2="15" stroke="#604FCD" stroke-width="2" stroke-linecap="round" />
-                    </svg>
+
+                <p class="hero-note">
+                    <span>✓</span> No credit card ·
+                    <span>✓</span> No subscription ·
+                    <span>✓</span> Forever free
+                </p>
+
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-num">42k+</div>
+                        <div class="hero-stat-lbl">Active Students</div>
+                    </div>
+
+                    <div>
+                        <div class="hero-stat-num">120+</div>
+                        <div class="hero-stat-lbl">Free Courses</div>
+                    </div>
+
+                    <div>
+                        <div class="hero-stat-num">12</div>
+                        <div class="hero-stat-lbl">Languages</div>
+                    </div>
+
+                    <div>
+                        <div class="hero-stat-num">4.9★</div>
+                        <div class="hero-stat-lbl">Avg. Rating</div>
+                    </div>
                 </div>
-                <h3 class="feature-title">Use the Exercism in-browser editor</h3>
-                <p class="feature-desc">Don't spend hours installing a language locally just to try it out. We support
-                    all 82 programming languages in our in-browser editor.</p>
+
             </div>
-            <div class="feature-item">
-                <div class="feature-icon-box">
-                    <svg width="30" height="26" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="1" y="1" width="20" height="14" rx="4" stroke="#604FCD" stroke-width="2" />
-                        <path d="M5 15L3 19L9 15" fill="white" stroke="#604FCD" stroke-width="2"
-                            stroke-linejoin="round" />
-                        <rect x="9" y="10" width="20" height="14" rx="4" fill="white" stroke="#604FCD"
-                            stroke-width="2" />
-                    </svg>
+
+            <div class="hero-right">
+
+                <div class="terminal">
+
+                    <div class="terminal-bar">
+                        <span class="t-dot" style="background:#ff5f57"></span>
+                        <span class="t-dot" style="background:#ffbd2e"></span>
+                        <span class="t-dot" style="background:#28ca41"></span>
+                        <span class="t-title">python_lesson_05.py</span>
+                    </div>
+
+                    <div class="terminal-body">
+
+                        <div class="t-line"><span class="t-cmt"># Lesson 5: Functions & Scope</span></div>
+
+                        <div class="t-line" style="margin-top:8px;"></div>
+
+                        <div class="t-line"><span class="t-kw">def</span> <span
+                                class="t-fn">calculate_grade</span>(<span class="t-cmd">score</span>):</div>
+
+                        <div class="t-line" style="padding-left:24px;"><span class="t-kw">if</span> score <span
+                                class="t-cmd">&gt;=</span> <span class="t-num">90</span>: <span
+                                class="t-kw">return</span> <span class="t-str">'A'</span></div>
+
+                        <div class="t-line" style="padding-left:24px;"><span class="t-kw">elif</span> score <span
+                                class="t-cmd">&gt;=</span> <span class="t-num">75</span>: <span
+                                class="t-kw">return</span> <span class="t-str">'B'</span></div>
+
+                        <div class="t-line" style="padding-left:24px;"><span class="t-kw">else</span>: <span
+                                class="t-kw">return</span> <span class="t-str">'F'</span></div>
+
+                        <div class="t-line" style="margin-top:8px;"></div>
+
+                        <div class="t-line"><span class="t-fn">print</span>(<span
+                                class="t-fn">calculate_grade</span>(<span class="t-num">82</span>))</div>
+
+                        <div class="t-line"
+                            style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);">
+                            <span class="t-prompt">▶</span>
+                            <span class="t-out">B</span>
+                        </div>
+
+                        <div class="t-line"><span class="t-prompt">$</span> <span class="t-cursor"></span></div>
+
+                    </div>
                 </div>
-                <h3 class="feature-title">Get automated analysis on your code</h3>
-                <p class="feature-desc">Not quite sure how well you've done? We run automatic analysis on your solutions
-                    to give you quick feedback and points of improvement.</p>
+
             </div>
         </div>
     </section>
 
-    <!-- ======================== MENTORING SECTION ======================== -->
-    <section class="mentoring-section">
+    <script>
 
-        <!--
-    ┌──────────────────────────────────────────────────┐
-    │  REPLACE src="" with your desk / mentoring image │
-    │  Recommended: PNG or SVG, ~800×600px             │
-    └──────────────────────────────────────────────────┘
-  -->
-        <div class="mentor-illustration">
-            <img src="" alt="Two people sitting at a desk, one mentoring the other with a laptop open">
-        </div>
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+        });
 
-        <div>
-            <svg width="52" height="52" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"
-                style="margin-bottom:16px;">
-                <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#160d35" stroke-width="3" />
-                <path d="M22 40h36M22 34v12M58 34v12M29 30v20M51 30v20" stroke="#160d35" stroke-width="2.5"
-                    stroke-linecap="round" />
-            </svg>
-            <h2 class="mentoring-title">
-                Deepen your knowledge with<br>
-                human mentoring, <span class="ul-free">for free.</span>
-            </h2>
-            <div class="squiggle"><span></span><span></span><span></span><span></span><span></span></div>
-            <p class="mentoring-desc">
-                Discover new and exciting ways to approach an exercise by getting mentored on it.
-                Become more familiar with the conventions, idioms and opinions of a particular programming language.
-            </p>
-        </div>
-    </section>
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
-    <!-- ======================== WHY MENTORING ======================== -->
-    <section class="why-section">
-        <h2 class="why-title">Why mentoring?</h2>
-        <div class="wave-div"><span></span><span></span><span></span><span></span><span></span></div>
-        <div class="why-grid">
-            <div class="why-card">
-                <svg class="why-icon-box" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M26 2 L28.5 9.5 L36 7 L33.5 14.5 L41 15.5 L36 21 L39 28 L31.5 26 L30 34 L26 27 L22 34 L20.5 26 L13 28 L16 21 L11 15.5 L18.5 14.5 L16 7 L23.5 9.5 Z"
-                        fill="white" stroke="#7c6fe0" stroke-width="2" stroke-linejoin="round" />
-                    <text x="50%" y="57%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Poppins,sans-serif" font-size="16" font-weight="800" fill="#7c6fe0">?</text>
-                </svg>
-                <h3 class="why-card-title">You don't know what you don't know</h3>
-                <p class="why-card-desc">When learning a new language, the hardest part is not being aware of the gaps
-                    in your knowledge. Our mentors can look at your code and immediately see the ideas you're not
-                    familiar with and give you a level-up by unlocking new knowledge.</p>
-            </div>
-            <div class="why-card">
-                <svg class="why-icon-box" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M26 2 L28.5 9.5 L36 7 L33.5 14.5 L41 15.5 L36 21 L39 28 L31.5 26 L30 34 L26 27 L22 34 L20.5 26 L13 28 L16 21 L11 15.5 L18.5 14.5 L16 7 L23.5 9.5 Z"
-                        fill="white" stroke="#7c6fe0" stroke-width="2" stroke-linejoin="round" />
-                    <text x="50%" y="57%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Poppins,sans-serif" font-size="16" font-weight="800" fill="#7c6fe0">?</text>
-                </svg>
-                <h3 class="why-card-title">Learn language-specific conventions</h3>
-                <p class="why-card-desc">Becoming fluent in a language is more than being able to write code in it –
-                    it's about being able to think in that language. Our mentors will help guide you to how to reshape
-                    your thinking to write idiomatic code.</p>
-            </div>
-            <div class="why-card">
-                <svg class="why-icon-box" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="3" width="30" height="22" rx="6" fill="white" stroke="#7c6fe0" stroke-width="2.5" />
-                    <path d="M8 25L4 34L14 25" fill="white" stroke="#7c6fe0" stroke-width="2.2"
-                        stroke-linejoin="round" />
-                    <rect x="20" y="22" width="30" height="22" rx="6" fill="white" stroke="#7c6fe0"
-                        stroke-width="2.5" />
-                    <path d="M44 44L48 53L38 44" fill="white" stroke="#7c6fe0" stroke-width="2.2"
-                        stroke-linejoin="round" />
-                </svg>
-                <h3 class="why-card-title">Learning with others is fun</h3>
-                <p class="why-card-desc">Getting feedback from real people is an amazingly exciting way to learn. And
-                    becoming a mentor and giving feedback yourself is an even bigger step forward. So complete the
-                    circle – be mentored and mentor 🎉</p>
-            </div>
-        </div>
-    </section>
+        document.querySelectorAll('.reveal,.reveal-stagger').forEach(el => observer.observe(el));
 
-    <!-- ======================== CTA BANNER ======================== -->
-    <section class="cta-banner">
-        <div>
-            <div class="cta-logo">
-                <div class="cta-logo-bracket">{-}</div>
-                <span class="cta-logo-name">exercism</span>
-            </div>
-            <h2 class="cta-title">Code practice and mentorship for everyone</h2>
-            <p class="cta-desc">Develop fluency in 82 programming languages with our unique blend of learning, practice
-                and mentoring. Exercism is fun, effective and 100% free, forever.</p>
-        </div>
-        <div class="cta-actions">
-            <button class="cta-btn-primary">Sign up for free</button>
-            <button class="cta-btn-secondary">Explore languages</button>
-        </div>
-    </section>
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
 
-    <!-- ======================== LANGUAGE TRACKS ======================== -->
-    <section class="tracks-section">
-        <div class="tracks-layout">
-            <div>
-                <h2 class="tracks-title">Our programming language tracks</h2>
-                <div class="tracks-wave"><span></span><span></span><span></span><span></span><span></span></div>
-                <div class="tracks-grid">
-                    <a href="#">8th</a><a href="#">Crystal</a><a href="#">Idris</a><a href="#">Pharo</a><a
-                        href="#">Scheme</a>
-                    <a href="#">ABAP</a><a href="#">D</a><a href="#">Java</a><a href="#">PHP</a><a href="#">SQLite</a>
-                    <a href="#">ARM64 Assembly</a><a href="#">Dart</a><a href="#">JavaScript</a><a
-                        href="#">PowerShell</a><a href="#">Standard ML</a>
-                    <a href="#">Arturo</a><a href="#">Delphi Pascal</a><a href="#">jq</a><a href="#">Prolog</a><a
-                        href="#">Swift</a>
-                    <a href="#">AWK</a><a href="#">Elixir</a><a href="#">Julia</a><a href="#">PureScript</a><a
-                        href="#">Tcl</a>
-                    <a href="#">Ballerina</a><a href="#">Elm</a><a href="#">Kotlin</a><a href="#">Pyret</a><a
-                        href="#">TypeScript</a>
-                    <a href="#">Bash</a><a href="#">Emacs Lisp</a><a href="#">Lean</a><a href="#">Python</a><a
-                        href="#">Uiua</a>
-                    <a href="#">Batch Script</a><a href="#">Erlang</a><a href="#">Lisp Flavoured Erlang</a><a
-                        href="#">R</a><a href="#">Unison</a>
-                    <a href="#">C</a><a href="#">Euphoria</a><a href="#">Lua</a><a href="#">Racket</a><a href="#">V</a>
-                    <a href="#">C#</a><a href="#">F#</a><a href="#">MIPS Assembly</a><a href="#">Raku</a><a href="#">Vim
-                        script</a>
-                    <a href="#">C++</a><a href="#">Fortran</a><a href="#">MoonScript</a><a href="#">ReasonML</a><a
-                        href="#">Visual Basic</a>
-                    <a href="#">Cairo</a><a href="#">Free Pascal</a><a href="#">Nim</a><a href="#">Red</a><a
-                        href="#">WebAssembly</a>
-                    <a href="#">CFML</a><a href="#">Futhark</a><a href="#">Objective-C</a><a href="#">Roc</a><a
-                        href="#">Wren</a>
-                    <a href="#">Clojure</a><a href="#">Gleam</a><a href="#">OCaml</a><a href="#">Ruby</a><a
-                        href="#">x86-64 Assembly</a>
-                    <a href="#">COBOL</a><a href="#">Go</a><a href="#">Odin</a><a href="#">Rust</a><a
-                        href="#">YAMLScript</a>
-                    <a href="#">CoffeeScript</a><a href="#">Groovy</a><a href="#">Perl</a><a href="#">Scala</a><a
-                        href="#">Zig</a>
-                    <a href="#">Common Lisp</a><a href="#">Haskell</a>
-                </div>
-            </div>
-            <div class="tracks-sidebar">
-                <p class="tracks-sidebar-title">Want to add a language track to Exercism?</p>
-                <p class="tracks-sidebar-text">Start a new topic in the <a href="#"
-                        class="tracks-sidebar-link">forum</a> and let's discuss it.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======================== FOOTER ======================== -->
-    <footer>
-        <div class="footer-grid">
-            <div>
-                <div class="footer-col-title">Editions</div>
-                <div class="footer-wave"><span></span><span></span><span></span><span></span></div>
-                <ul class="footer-links">
-                    <li><a href="#">Exercism</a></li>
-                    <li><a href="#">Learn to Code</a></li>
-                    <li><a href="#">Coding Fundamentals</a></li>
-                    <li><a href="#">Exercism for Teams</a></li>
-                    <li><a href="#">Exercism Research</a></li>
-                </ul>
-            </div>
-            <div>
-                <div class="footer-col-title">About</div>
-                <div class="footer-wave"><span></span><span></span><span></span><span></span></div>
-                <ul class="footer-links">
-                    <li><a href="#">About Exercism</a></li>
-                    <li><a href="#">Our team</a></li>
-                    <li><a href="#">Contributors</a></li>
-                    <li><a href="#">Partners</a></li>
-                    <li><a href="#">Individual supporters</a></li>
-                </ul>
-            </div>
-            <div>
-                <div class="footer-col-title">Get involved</div>
-                <div class="footer-wave"><span></span><span></span><span></span><span></span></div>
-                <ul class="footer-links">
-                    <li><a href="#">Exercism Insiders</a></li>
-                    <li><a href="#">Contribute</a></li>
-                    <li><a href="#">Mentor</a></li>
-                    <li><a href="#">Donate</a></li>
-                </ul>
-            </div>
-            <div>
-                <div class="footer-col-title">Legal &amp; policies</div>
-                <div class="footer-wave"><span></span><span></span><span></span><span></span></div>
-                <ul class="footer-links">
-                    <li><a href="#">Terms of usage</a></li>
-                    <li><a href="#">Privacy policy</a></li>
-                    <li><a href="#">Cookie policy</a></li>
-                    <li><a href="#">Code of conduct</a></li>
-                    <li><a href="#">Accessibility statement</a></li>
-                </ul>
-            </div>
-            <div>
-                <div class="footer-col-title">Keep in touch</div>
-                <div class="footer-wave"><span></span><span></span><span></span><span></span></div>
-                <ul class="footer-links">
-                    <li><a href="#">Exercism's blog</a></li>
-                    <li><a href="#">Discuss on GitHub</a></li>
-                    <li><a href="#">Contact us</a></li>
-                    <li><a href="#">Report abuse</a></li>
-                </ul>
-            </div>
-            <div>
-                <div class="footer-col-title">Get help</div>
-                <div class="footer-wave"><span></span><span></span><span></span><span></span></div>
-                <ul class="footer-links">
-                    <li><a href="#">Exercism's Docs</a></li>
-                    <li><a href="#">Getting started</a></li>
-                    <li><a href="#">FAQs</a></li>
-                    <li><a href="#">Installing the CLI</a></li>
-                    <li><a href="#">Interactive CLI Walkthrough</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-socials">
-            <a href="#" class="social-btn social-twitter" aria-label="Twitter">
-                <svg width="20" height="16" viewBox="0 0 24 20" fill="white">
-                    <path
-                        d="M23 2.5a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 3s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 2.5z" />
-                </svg>
-            </a>
-            <a href="#" class="social-btn social-facebook" aria-label="Facebook">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
-                </svg>
-            </a>
-            <a href="#" class="social-btn social-github" aria-label="GitHub">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />
-                </svg>
-            </a>
-        </div>
-    </footer>
+    </script>
 
 </body>
 
