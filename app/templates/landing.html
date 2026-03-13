@@ -9,10 +9,865 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="{{url_for('static',filename='/css/landing.css')}}">
+    <style>
+        :root {
+            --purple-dark: #130b43;
+            --purple-main: #2e1a7e;
+            --purple-mid: #5c4fc7;
+            --purple-accent: #604FCD;
+            --teal: #00c4b3;
+            --yellow: #f7e94b;
+            --bg-light: #f5f5fb;
+            --bg-white: #ffffff;
+            --text-dark: #160d35;
+            --text-mid: #3b3559;
+            --text-muted: #5e5a7a;
+            --border-light: #e0ddf5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            height: 64px;
+            background: var(--bg-white);
+            border-bottom: 3px solid var(--purple-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo-bracket {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 2.5px solid var(--purple-dark);
+            border-radius: 8px;
+            font-family: 'Source Code Pro', monospace;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--purple-dark);
+            letter-spacing: -1px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .nav-links a:hover {
+            color: var(--purple-accent);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-signup {
+            background: var(--purple-accent);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: var(--purple-accent);
+            border: 2px solid var(--purple-accent);
+            padding: 9px 22px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: var(--bg-light);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpolygon points='30,2 58,16 58,44 30,58 2,44 2,16' fill='none' stroke='%23e0ddf5' stroke-width='1'/%3E%3C/svg%3E");
+            background-size: 80px 70px;
+            padding: 72px 48px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            min-height: 520px;
+        }
+
+        .hero-title {
+            font-size: 52px;
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .hero-title .highlight {
+            background: var(--yellow);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        .hero-desc {
+            font-size: 17px;
+            color: var(--text-mid);
+            line-height: 1.7;
+            max-width: 520px;
+            margin-bottom: 32px;
+        }
+
+        .hero-desc em {
+            font-style: italic;
+        }
+
+        .hero-desc strong {
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .btn-primary {
+            background: var(--purple-accent);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--purple-accent);
+            border: 2px solid var(--purple-accent);
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .hero-notice {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 2px solid var(--purple-accent);
+            border-radius: 10px;
+            padding: 14px 18px;
+            max-width: 520px;
+            background: white;
+        }
+
+        .hero-notice-bracket {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--text-dark);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .hero-notice-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            white-space: nowrap;
+        }
+
+        .hero-notice-text {
+            font-size: 13px;
+            color: var(--text-mid);
+            flex: 1;
+        }
+
+        .hero-notice-link {
+            color: var(--purple-accent);
+            font-weight: 700;
+            font-size: 13px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .hero-notice-close {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--purple-accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--purple-accent);
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        /* ── Hero visual: people illustration + lang badges ── */
+        .hero-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* People illustration placeholder */
+        .people-illustration {
+            width: 400px;
+            height: 280px;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            background: #d6f0ff;
+            /* light-blue fallback while empty */
+        }
+
+        .people-illustration img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Hero language badges row */
+        .hero-lang-badges {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .hero-lang-badge {
+            width: 58px;
+            height: 58px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg-light);
+            /* fallback */
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-lang-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* ===== WAVE DIVIDER ===== */
+        .wave-div {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .wave-div span {
+            display: inline-block;
+            width: 10px;
+            height: 2px;
+            background: var(--purple-main);
+            border-radius: 2px;
+        }
+
+        .wave-div span:nth-child(odd) {
+            margin-top: 5px;
+        }
+
+        /* ===== LANGUAGES SECTION ===== */
+        .languages-section {
+            padding: 80px 48px;
+            background: var(--bg-white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative corner elements */
+        .deco-diamond {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #00c4b3, #00e5d5);
+            border-radius: 3px;
+            transform: rotate(45deg);
+            top: 70px;
+            left: 90px;
+        }
+
+        .deco-square {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #f7e94b;
+            border: 2px solid #d4c200;
+            top: 65px;
+            right: 80px;
+        }
+
+        .deco-triangle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 14px solid #f7e94b;
+            bottom: 70px;
+            right: 180px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-title .ul {
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        /* ── Language card grid ── */
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 32px 24px;
+            margin: 48px auto 0;
+            max-width: 960px;
+        }
+
+        .lang-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Hexagonal clip for language icon image */
+        .lang-hex-wrap {
+            width: 80px;
+            height: 80px;
+            clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+            background: var(--bg-light);
+            /* shown while image loads / empty */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lang-hex-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .lang-name {
+            font-family: 'Source Code Pro', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .lang-students {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .see-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 48px;
+            padding: 14px 28px;
+            border-radius: 50px;
+            border: 2px solid var(--border-light);
+            background: var(--bg-light);
+            color: var(--text-mid);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .see-all-btn:hover {
+            border-color: var(--purple-accent);
+            color: var(--purple-accent);
+        }
+
+        /* ===== FEATURES ===== */
+        .features-section {
+            padding: 80px 48px 0;
+            background: var(--bg-white);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 64px;
+        }
+
+        .feature-icon-box {
+            width: 52px;
+            height: 52px;
+            border: 2px solid var(--purple-accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .feature-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* ===== MENTORING ===== */
+        .mentoring-section {
+            padding: 40px 48px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            background: var(--bg-white);
+        }
+
+        /* Mentoring illustration placeholder */
+        .mentor-illustration {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #f0f0f8;
+            /* fallback while empty */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mentor-illustration img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .mentoring-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .mentoring-title .ul-free {
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .mentoring-desc {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 480px;
+        }
+
+        .squiggle {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+            margin: 14px 0;
+        }
+
+        .squiggle span {
+            display: inline-block;
+            width: 10px;
+            height: 2px;
+            background: var(--purple-main);
+            border-radius: 2px;
+        }
+
+        .squiggle span:nth-child(odd) {
+            margin-top: 4px;
+        }
+
+        .squiggle span:nth-child(even) {
+            margin-bottom: 4px;
+        }
+
+        /* ===== WHY MENTORING ===== */
+        .why-section {
+            padding: 72px 48px;
+            background: var(--bg-light);
+            text-align: center;
+        }
+
+        .why-title {
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+            margin-top: 48px;
+            text-align: left;
+        }
+
+        .why-icon-box {
+            width: 52px;
+            height: 52px;
+            margin-bottom: 16px;
+        }
+
+        .why-card-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .why-card-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.75;
+        }
+
+        /* ===== CTA BANNER ===== */
+        .cta-banner {
+            background: #1e1464;
+            padding: 40px 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+        }
+
+        .cta-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .cta-logo-bracket {
+            width: 28px;
+            height: 28px;
+            border: 2px solid white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .cta-logo-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .cta-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .cta-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 480px;
+            line-height: 1.6;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .cta-btn-primary {
+            background: var(--purple-accent);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .cta-btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        /* ===== TRACKS ===== */
+        .tracks-section {
+            background: #130b3d;
+            padding: 64px;
+            color: white;
+        }
+
+        .tracks-layout {
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .tracks-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .tracks-wave {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 40px;
+        }
+
+        .tracks-wave span {
+            display: block;
+            width: 10px;
+            height: 2px;
+            background: var(--teal);
+            border-radius: 2px;
+        }
+
+        .tracks-wave span:nth-child(odd) {
+            margin-top: 3px;
+        }
+
+        .tracks-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px 0;
+        }
+
+        .tracks-grid a {
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 3px 0;
+            display: block;
+        }
+
+        .tracks-grid a:hover {
+            color: white;
+        }
+
+        .tracks-sidebar {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .tracks-sidebar-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .tracks-sidebar-text {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.6;
+        }
+
+        .tracks-sidebar-link {
+            color: var(--yellow);
+            font-weight: 600;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #130b3d;
+            padding: 56px 64px 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        .footer-col-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 14px;
+        }
+
+        .footer-wave {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 16px;
+        }
+
+        .footer-wave span {
+            display: block;
+            width: 8px;
+            height: 2px;
+            background: var(--teal);
+            border-radius: 2px;
+        }
+
+        .footer-wave span:nth-child(odd) {
+            margin-top: 3px;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.65);
+            text-decoration: none;
+            font-size: 13.5px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .social-twitter {
+            background: #1da1f2;
+        }
+
+        .social-facebook {
+            background: #1877f2;
+        }
+
+        .social-github {
+            background: #555;
+        }
+    </style>
 </head>
 
 <body>
+
+    <!-- ======================== NAVBAR ======================== -->
     <nav>
         <a href="#" class="nav-logo">
             <div class="logo-bracket">{-}</div>
@@ -30,25 +885,22 @@
         </div>
     </nav>
 
+    <!-- ======================== HERO ======================== -->
     <section class="hero">
         <div class="hero-content">
-            <h1 class="hero-title">
-                Get <span class="highlight">really</span> good at<br>programming.
-            </h1>
+            <h1 class="hero-title">Get <span class="highlight">really</span> good at<br>programming.</h1>
             <p class="hero-desc">
-                Develop fluency in <em>82 programming languages</em> with our unique
-                blend of learning, practice and mentoring. Exercism is fun, effective
-                and <strong>100% free, forever.</strong>
+                Develop fluency in <em>82 programming languages</em> with our unique blend of
+                learning, practice and mentoring. Exercism is fun, effective and
+                <strong>100% free, forever.</strong>
             </p>
             <div class="hero-buttons">
                 <button class="btn-primary">Sign up for free</button>
                 <button class="btn-secondary">Explore languages</button>
             </div>
             <div class="hero-notice">
-                <div class="hero-notice-logo">
-                    <div class="hero-notice-bracket">{-}</div>
-                    <span class="hero-notice-name">exercism</span>
-                </div>
+                <div class="hero-notice-bracket">{-}</div>
+                <span class="hero-notice-name">exercism</span>
                 <span class="hero-notice-text">is an independent, community funded, not-for-profit organisation.</span>
                 <a href="#" class="hero-notice-link">Learn more</a>
                 <div class="hero-notice-close">✕</div>
@@ -56,194 +908,78 @@
         </div>
 
         <div class="hero-visual">
-            <div class="hero-illustration">
-                <!-- Background circle -->
-                <div class="hero-bg-circle"></div>
 
-                <!-- People group -->
-                <div class="people-group">
-                    <img src="{{url_for('static',filename='/imgs/landing-3guys.svg')}}">
-                </div>
+            <!--
+      ┌─────────────────────────────────────────┐
+      │  REPLACE src="" with your illustration  │
+      │  of the three people at the laptop.     │
+      │  Recommended: PNG or SVG, ~800×560px    │
+      └─────────────────────────────────────────┘
+    -->
+            <div class="people-illustration">
+                <img src="" alt="Three diverse programmers smiling and working together at a laptop">
             </div>
+
+            <!-- Hero badge row — replace each src="" with your language icon -->
+            <div class="hero-lang-badges">
+                <div class="hero-lang-badge"><img src="" alt="C# icon"></div>
+                <div class="hero-lang-badge"><img src="" alt="Java icon"></div>
+                <div class="hero-lang-badge"><img src="" alt="Python icon"></div>
+                <div class="hero-lang-badge"><img src="" alt="Ruby icon"></div>
+                <div class="hero-lang-badge"><img src="" alt="Elixir icon"></div>
+            </div>
+
         </div>
     </section>
 
+    <!-- ======================== LANGUAGES SECTION ======================== -->
     <section class="languages-section">
-        <!-- Decorative elements -->
-        <div
-            style="position:absolute;top:70px;left:90px;width:20px;height:20px;background:linear-gradient(135deg,#00c4b3,#00e5d5);border-radius:3px;transform:rotate(45deg);">
-        </div>
-        <div
-            style="position:absolute;top:65px;right:80px;width:16px;height:16px;background:#f7e94b;border:2px solid #d4c200;">
-        </div>
-        <div class="dot-grid top-right">
-            <span></span><span></span><span></span><span></span>
-            <span></span><span></span><span></span><span></span>
-            <span></span><span></span><span></span><span></span>
-        </div>
-        <div
-            style="position:absolute;bottom:70px;right:180px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:14px solid #f7e94b;">
-        </div>
-        <div
-            style="position:absolute;top:120px;left:40px;font-size:22px;color:var(--border-light);font-weight:900;transform:rotate(-30deg);">
-            \</div>
+        <div class="deco-diamond"></div>
+        <div class="deco-square"></div>
+        <div class="deco-triangle"></div>
 
-        <!-- Hex icon -->
-        <div class="hex-outline">
-            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#160d35" stroke-width="3" />
-                <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                    font-family="Source Code Pro, monospace" font-size="22" font-weight="700" fill="#160d35">#</text>
-            </svg>
-        </div>
+        <!-- Section heading hex icon -->
+        <svg width="64" height="64" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"
+            style="margin: 0 auto 24px; display: block;">
+            <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#160d35" stroke-width="3" />
+            <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
+                font-family="Source Code Pro,monospace" font-size="22" font-weight="700" fill="#160d35">#</text>
+        </svg>
 
-        <h2 class="section-title">
-            Explore and <span class="underline">get fluent</span> in<br>
-            82 programming languages
-        </h2>
+        <h2 class="section-title">Explore and <span class="ul">get fluent</span> in<br>82 programming languages</h2>
+        <div class="wave-div"><span></span><span></span><span></span><span></span><span></span></div>
 
-        <div class="wave-divider" style="justify-content:center;margin:16px 0;">
-            <span></span><span></span><span></span><span></span><span></span>
-        </div>
-
-        <!-- Language grid -->
+        <!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║  JINJA2 — pass a list called `languages` to the template.               ║
+  ║  Each item should have: name, students, icon_url                        ║
+  ║                                                                         ║
+  ║  Example Python / Flask context:                                        ║
+  ║                                                                         ║
+  ║  languages = [                                                           ║
+  ║    { "name": "Python",     "students": "693,993", "icon_url": "..." },  ║
+  ║    { "name": "JavaScript", "students": "463,197", "icon_url": "..." },  ║
+  ║    ...                                                                  ║
+  ║  ]                                                                      ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+  -->
         <div class="lang-grid">
-            <!-- Row 1 -->
+            {% for lang in languages %}
             <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#3b82f6"
-                        stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="16" font-weight="700"
-                        fill="#3b82f6">Py</text>
-                </svg>
-                <div class="lang-name">Python</div>
-                <div class="lang-students">693,993 students</div>
+                <!--
+        Hexagonal clip applied via CSS class .lang-hex-wrap
+        Replace icon_url with your image path / URL variable
+      -->
+                <div class="lang-hex-wrap">
+                    <img src="{{ lang.icon_url }}" alt="{{ lang.name }} icon">
+                </div>
+                <div class="lang-name">{{ lang.name }}</div>
+                <div class="lang-students">{{ lang.students }} students</div>
             </div>
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="#f0c000" stroke="#c89000"
-                        stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="16" font-weight="700"
-                        fill="#1a1a1a">JS</text>
-                </svg>
-                <div class="lang-name">JavaScript</div>
-                <div class="lang-students">463,197 students</div>
-            </div>
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#e05c3a"
-                        stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="15" font-weight="700"
-                        fill="#e05c3a">Java</text>
-                </svg>
-                <div class="lang-name">Java</div>
-                <div class="lang-students">251,376 students</div>
-            </div>
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#9b5de5"
-                        stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="15" font-weight="700"
-                        fill="#9b5de5">C++</text>
-                </svg>
-                <div class="lang-name">C++</div>
-                <div class="lang-students">174,480 students</div>
-            </div>
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#7c3aed"
-                        stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="16" font-weight="700"
-                        fill="#7c3aed">C#</text>
-                </svg>
-                <div class="lang-name">C#</div>
-                <div class="lang-students">164,377 students</div>
-            </div>
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#00bfa5"
-                        stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="15" font-weight="700"
-                        fill="#00bfa5">Go</text>
-                </svg>
-                <div class="lang-name">Go</div>
-                <div class="lang-students">154,476 students</div>
-            </div>
-
-            <!-- Row 2 -->
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#00bfa5"
-                        stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="22" font-weight="700"
-                        fill="#00bfa5">C</text>
-                </svg>
-                <div class="lang-name">C</div>
-                <div class="lang-students">140,441 students</div>
-            </div>
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#555" stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="14" font-weight="700"
-                        fill="#555">Rust</text>
-                </svg>
-                <div class="lang-name">Rust</div>
-                <div class="lang-students">132,217 students</div>
-            </div>
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#2563eb"
-                        stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="13" font-weight="700"
-                        fill="#2563eb">TS</text>
-                </svg>
-                <div class="lang-name">TypeScript</div>
-                <div class="lang-students">89,793 students</div>
-            </div>
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#555" stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="12" font-weight="700"
-                        fill="#555">Bash</text>
-                </svg>
-                <div class="lang-name">Bash</div>
-                <div class="lang-students">78,164 students</div>
-            </div>
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#e05c3a"
-                        stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="13" font-weight="700"
-                        fill="#e05c3a">Ruby</text>
-                </svg>
-                <div class="lang-name">Ruby</div>
-                <div class="lang-students">60,828 students</div>
-            </div>
-            <div class="lang-card">
-                <svg class="lang-hex-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#7c3aed"
-                        stroke-width="3.5" />
-                    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
-                        font-family="Source Code Pro, monospace" font-size="13" font-weight="700"
-                        fill="#7c3aed">PHP</text>
-                </svg>
-                <div class="lang-name">PHP</div>
-                <div class="lang-students">60,426 students</div>
-            </div>
+            {% endfor %}
         </div>
 
-        <a href="#" class="see-all-btn">See all 82 Language Tracks <span class="arrow">→</span></a>
+        <a href="#" class="see-all-btn">See all 82 Language Tracks →</a>
     </section>
 
     <!-- ======================== FEATURES SECTION ======================== -->
@@ -251,7 +987,6 @@
         <div class="features-grid">
             <div class="feature-item">
                 <div class="feature-icon-box">
-                    <!-- Terminal icon CSS -->
                     <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="1" y="1" width="26" height="20" rx="4" stroke="#604FCD" stroke-width="2" />
                         <path d="M6 7L10 11L6 15" stroke="#604FCD" stroke-width="2" stroke-linecap="round"
@@ -266,7 +1001,6 @@
             </div>
             <div class="feature-item">
                 <div class="feature-icon-box">
-                    <!-- Code brackets icon -->
                     <svg width="30" height="22" viewBox="0 0 30 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="1" y="1" width="28" height="20" rx="4" stroke="#604FCD" stroke-width="2" />
                         <path d="M10 8L7 11L10 14" stroke="#604FCD" stroke-width="2" stroke-linecap="round"
@@ -278,11 +1012,10 @@
                 </div>
                 <h3 class="feature-title">Use the Exercism in-browser editor</h3>
                 <p class="feature-desc">Don't spend hours installing a language locally just to try it out. We support
-                    all 82 of our programming languages in our in-browser editor.</p>
+                    all 82 programming languages in our in-browser editor.</p>
             </div>
             <div class="feature-item">
                 <div class="feature-icon-box">
-                    <!-- Chat bubbles icon -->
                     <svg width="30" height="26" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="1" y="1" width="20" height="14" rx="4" stroke="#604FCD" stroke-width="2" />
                         <path d="M5 15L3 19L9 15" fill="white" stroke="#604FCD" stroke-width="2"
@@ -300,94 +1033,32 @@
 
     <!-- ======================== MENTORING SECTION ======================== -->
     <section class="mentoring-section">
+
+        <!--
+    ┌──────────────────────────────────────────────────┐
+    │  REPLACE src="" with your desk / mentoring image │
+    │  Recommended: PNG or SVG, ~800×600px             │
+    └──────────────────────────────────────────────────┘
+  -->
         <div class="mentor-illustration">
-            <div class="desk-scene">
-                <!-- Chairs -->
-                <div class="chair-1"></div>
-                <div class="chair-2"></div>
-
-                <!-- Lamp -->
-                <div class="desk-lamp">
-                    <div class="lamp-stand"></div>
-                    <div class="lamp-arm"></div>
-                    <div class="lamp-head"></div>
-                    <div class="lamp-light"></div>
-                </div>
-
-                <!-- Person 1 -->
-                <div class="desk-person-1">
-                    <div class="dp1-head">
-                        <div class="dp1-hair"></div>
-                        <div
-                            style="position:absolute;top:24px;left:9px;width:7px;height:5px;background:#7a4a28;border-radius:50%;">
-                        </div>
-                        <div
-                            style="position:absolute;top:24px;right:9px;width:7px;height:5px;background:#7a4a28;border-radius:50%;">
-                        </div>
-                        <div
-                            style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:12px;height:5px;border:2px solid #7a4a28;border-top:none;border-radius:0 0 8px 8px;">
-                        </div>
-                    </div>
-                    <div class="dp1-body">
-                        <div class="dp1-arm"></div>
-                    </div>
-                </div>
-
-                <!-- Person 2 -->
-                <div class="desk-person-2">
-                    <div class="dp2-head">
-                        <div class="dp2-hair"></div>
-                        <div
-                            style="position:absolute;top:26px;left:10px;width:7px;height:5px;background:#7a4a00;border-radius:50%;">
-                        </div>
-                        <div
-                            style="position:absolute;top:26px;right:10px;width:7px;height:5px;background:#7a4a00;border-radius:50%;">
-                        </div>
-                        <div
-                            style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:12px;height:5px;border:2px solid #7a4a00;border-top:none;border-radius:0 0 8px 8px;">
-                        </div>
-                        <div class="dp2-think">?</div>
-                    </div>
-                    <div class="dp2-body"></div>
-                </div>
-
-                <!-- Desk surface -->
-                <div class="desk"></div>
-
-                <!-- Laptop on desk -->
-                <div class="desk-laptop">
-                    <div class="dl-screen"></div>
-                    <div class="dl-base"></div>
-                </div>
-
-                <!-- Ground line -->
-                <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:#ddd;border-radius:2px;">
-                </div>
-            </div>
+            <img src="" alt="Two people sitting at a desk, one mentoring the other with a laptop open">
         </div>
 
-        <div class="mentoring-content">
-            <!-- Dumbbell hex icon -->
-            <div style="margin-bottom:16px;">
-                <svg width="52" height="52" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#160d35" stroke-width="3" />
-                    <path d="M24 40h32M24 35v10M56 35v10M30 32v16M50 32v16" stroke="#160d35" stroke-width="2.5"
-                        stroke-linecap="round" />
-                </svg>
-            </div>
-
+        <div>
+            <svg width="52" height="52" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"
+                style="margin-bottom:16px;">
+                <polygon points="40,4 76,22 76,58 40,76 4,58 4,22" fill="white" stroke="#160d35" stroke-width="3" />
+                <path d="M22 40h36M22 34v12M58 34v12M29 30v20M51 30v20" stroke="#160d35" stroke-width="2.5"
+                    stroke-linecap="round" />
+            </svg>
             <h2 class="mentoring-title">
                 Deepen your knowledge with<br>
-                human mentoring, <span class="underline-free">for free.</span>
+                human mentoring, <span class="ul-free">for free.</span>
             </h2>
-
-            <div class="deco-squiggle">
-                <span></span><span></span><span></span><span></span><span></span>
-            </div>
-
+            <div class="squiggle"><span></span><span></span><span></span><span></span><span></span></div>
             <p class="mentoring-desc">
-                Discover new and exciting ways to approach an exercise by getting mentored on it. Become more familiar
-                with the conventions, idioms and opinions of a particular programming language.
+                Discover new and exciting ways to approach an exercise by getting mentored on it.
+                Become more familiar with the conventions, idioms and opinions of a particular programming language.
             </p>
         </div>
     </section>
@@ -395,50 +1066,44 @@
     <!-- ======================== WHY MENTORING ======================== -->
     <section class="why-section">
         <h2 class="why-title">Why mentoring?</h2>
-        <div class="wave-divider" style="justify-content:center;margin:12px 0;">
-            <span></span><span></span><span></span><span></span><span></span>
-        </div>
-
+        <div class="wave-div"><span></span><span></span><span></span><span></span><span></span></div>
         <div class="why-grid">
             <div class="why-card">
-                <div class="why-icon">
-                    <!-- Question mark badge icon -->
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M16 2C12 2 8 4 8 8C8 10 9 12 11 13C11 15 10 16 8 17V19C11 18 13 17 14 15C15.3 15.3 16 16 16 16C18 13 19 11 19 9C19 5 18 2 16 2Z"
-                            stroke="#7c6fe0" stroke-width="2" fill="none" />
-                        <circle cx="16" cy="22" r="2" fill="#7c6fe0" />
-                        <circle cx="16" cy="16" r="14" stroke="#7c6fe0" stroke-width="2" />
-                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" font-size="14"
-                            font-weight="700" fill="#7c6fe0">?</text>
-                    </svg>
-                </div>
+                <svg class="why-icon-box" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M26 2 L28.5 9.5 L36 7 L33.5 14.5 L41 15.5 L36 21 L39 28 L31.5 26 L30 34 L26 27 L22 34 L20.5 26 L13 28 L16 21 L11 15.5 L18.5 14.5 L16 7 L23.5 9.5 Z"
+                        fill="white" stroke="#7c6fe0" stroke-width="2" stroke-linejoin="round" />
+                    <text x="50%" y="57%" text-anchor="middle" dominant-baseline="middle"
+                        font-family="Poppins,sans-serif" font-size="16" font-weight="800" fill="#7c6fe0">?</text>
+                </svg>
                 <h3 class="why-card-title">You don't know what you don't know</h3>
                 <p class="why-card-desc">When learning a new language, the hardest part is not being aware of the gaps
                     in your knowledge. Our mentors can look at your code and immediately see the ideas you're not
                     familiar with and give you a level-up by unlocking new knowledge.</p>
             </div>
             <div class="why-card">
-                <div class="why-icon">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="16" cy="16" r="14" stroke="#7c6fe0" stroke-width="2" />
-                        <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" font-size="14"
-                            font-weight="700" fill="#7c6fe0">?</text>
-                    </svg>
-                </div>
+                <svg class="why-icon-box" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M26 2 L28.5 9.5 L36 7 L33.5 14.5 L41 15.5 L36 21 L39 28 L31.5 26 L30 34 L26 27 L22 34 L20.5 26 L13 28 L16 21 L11 15.5 L18.5 14.5 L16 7 L23.5 9.5 Z"
+                        fill="white" stroke="#7c6fe0" stroke-width="2" stroke-linejoin="round" />
+                    <text x="50%" y="57%" text-anchor="middle" dominant-baseline="middle"
+                        font-family="Poppins,sans-serif" font-size="16" font-weight="800" fill="#7c6fe0">?</text>
+                </svg>
                 <h3 class="why-card-title">Learn language-specific conventions</h3>
                 <p class="why-card-desc">Becoming fluent in a language is more than being able to write code in it –
                     it's about being able to think in that language. Our mentors will help guide you to how to reshape
                     your thinking to write idiomatic code.</p>
             </div>
             <div class="why-card">
-                <div class="why-icon">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="2" y="4" width="18" height="14" rx="3" stroke="#7c6fe0" stroke-width="2" fill="none" />
-                        <rect x="12" y="12" width="18" height="14" rx="3" stroke="#7c6fe0" stroke-width="2"
-                            fill="white" />
-                    </svg>
-                </div>
+                <svg class="why-icon-box" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="3" width="30" height="22" rx="6" fill="white" stroke="#7c6fe0" stroke-width="2.5" />
+                    <path d="M8 25L4 34L14 25" fill="white" stroke="#7c6fe0" stroke-width="2.2"
+                        stroke-linejoin="round" />
+                    <rect x="20" y="22" width="30" height="22" rx="6" fill="white" stroke="#7c6fe0"
+                        stroke-width="2.5" />
+                    <path d="M44 44L48 53L38 44" fill="white" stroke="#7c6fe0" stroke-width="2.2"
+                        stroke-linejoin="round" />
+                </svg>
                 <h3 class="why-card-title">Learning with others is fun</h3>
                 <p class="why-card-desc">Getting feedback from real people is an amazingly exciting way to learn. And
                     becoming a mentor and giving feedback yourself is an even bigger step forward. So complete the
@@ -449,7 +1114,7 @@
 
     <!-- ======================== CTA BANNER ======================== -->
     <section class="cta-banner">
-        <div class="cta-left">
+        <div>
             <div class="cta-logo">
                 <div class="cta-logo-bracket">{-}</div>
                 <span class="cta-logo-name">exercism</span>
@@ -469,9 +1134,7 @@
         <div class="tracks-layout">
             <div>
                 <h2 class="tracks-title">Our programming language tracks</h2>
-                <div class="tracks-wave">
-                    <span></span><span></span><span></span><span></span><span></span>
-                </div>
+                <div class="tracks-wave"><span></span><span></span><span></span><span></span><span></span></div>
                 <div class="tracks-grid">
                     <a href="#">8th</a><a href="#">Crystal</a><a href="#">Idris</a><a href="#">Pharo</a><a
                         href="#">Scheme</a>
@@ -503,7 +1166,7 @@
                         href="#">YAMLScript</a>
                     <a href="#">CoffeeScript</a><a href="#">Groovy</a><a href="#">Perl</a><a href="#">Scala</a><a
                         href="#">Zig</a>
-                    <a href="#">Common Lisp</a><a href="#">Haskell</a><a href=""></a><a href=""></a><a href=""></a>
+                    <a href="#">Common Lisp</a><a href="#">Haskell</a>
                 </div>
             </div>
             <div class="tracks-sidebar">
@@ -582,22 +1245,21 @@
                 </ul>
             </div>
         </div>
-
         <div class="footer-socials">
             <a href="#" class="social-btn social-twitter" aria-label="Twitter">
-                <!-- Twitter bird CSS approximation -->
-                <svg width="20" height="16" viewBox="0 0 24 20" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <svg width="20" height="16" viewBox="0 0 24 20" fill="white">
                     <path
                         d="M23 2.5a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 3s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 2.5z" />
                 </svg>
             </a>
             <a href="#" class="social-btn social-facebook" aria-label="Facebook">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                     <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
                 </svg>
             </a>
             <a href="#" class="social-btn social-github" aria-label="GitHub">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path
                         d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />
                 </svg>

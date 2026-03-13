@@ -1,11 +1,13 @@
 from . import main_bp
 from flask_login import login_required
 from flask import render_template
+from .loader import getLangs
 
 
 @main_bp.route("/")
 def index():
-    return render_template("landing.html")
+    return render_template("landing.html",langs=getLangs())
+
 
 @main_bp.route("/courses")
 @login_required
