@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}New Language — LearnCode{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="lc-card">
+        <div class="lc-card-header">
+          <i class="bi bi-translate me-2"></i>Create New Language
+        </div>
+        <div class="lc-card-body">
+          <form method="POST" action="{{ url_for('teacher.new_language') }}">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Language ID <span class="text-muted small">(e.g. python, javascript)</span></label>
+              <input type="text" name="lang_id" class="form-control lc-input"
+                     placeholder="python" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Display Name</label>
+              <input type="text" name="name" class="form-control lc-input"
+                     placeholder="Python" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Description</label>
+              <textarea name="description" class="form-control lc-input" rows="3"
+                        placeholder="A short description..."></textarea>
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Icon path <span class="text-muted small">(e.g. langs/python.svg)</span></label>
+              <input type="text" name="icon" class="form-control lc-input"
+                     placeholder="langs/python.svg" />
+            </div>
+            <div class="d-flex gap-3">
+              <button type="submit" class="btn lc-btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Create Language
+              </button>
+              <a href="{{ url_for('teacher.dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

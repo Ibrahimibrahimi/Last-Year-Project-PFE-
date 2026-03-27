@@ -1,0 +1,298 @@
+{% extends "layout.html" %}
+{% block title %}{{ student.username }}'s Profile — LearnCode{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- Back + heading -->
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb lc-breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('teacher.dashboard') }}">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="{{ url_for('teacher.students') }}">Students</a></li>
+          <li class="breadcrumb-item active">{{ student.username }}</li>
+        </ol>
+      </nav>
+      <h3 class="fw-bold mb-0 mt-1">
+        <i class="bi bi-person-circle me-2 text-primary"></i>{{ student.username }}
+      </h3>
+    </div>
+    <a href="{{ url_for('teacher.students') }}" class="btn lc-btn-outline">
+      <i class="bi bi-arrow-left me-1"></i>All Students
+    </a>
+  </div>
+
+  <!-- Profile banner -->
+  <div class="lc-welcome-banner mb-4">
+    <div class="d-flex align-items-center gap-4 flex-wrap">
+      <i class="bi bi-person-circle" style="font-size:4rem; color:var(--lc-accent2);"></i>
+      <div class="flex-grow-1">
+        <h4 class="fw-bold mb-1">{{ student.username }}</h4>
+        <p class="text-muted mb-1" style="font-size:0.9rem;">{{ student.email }}</p>
+        <p class="mb-1">
+          Level:
+          <span class="lc-badge-level-{{ student.level or 'None' }}">
+            {{ student.level | capitalize if student.level else 'Unset' }}
+          </span>
+        </p>
+        {% if student.bio %}
+        <p class="text-muted mb-0" style="font-size:0.9rem;">{{ student.bio }}</p>
+        {% endif %}
+      </div>
+      <div class="text-end">
+        <div style="font-size:2rem; font-weight:800; color:var(--lc-accent2);">
+          <i class="bi bi-star-fill text-warning me-1" style="font-size:1.4rem;"></i>{{ student.xp }}
+        </div>
+        <div class="text-muted" style="font-size:0.85rem;">Total XP</div>
+        <div class="text-muted mt-1" style="font-size:0.78rem;">
+          Joined {{ student.created_at.strftime('%B %d, %Y') }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-book-half lc-smc-icon text-primary"></i>
+        <div class="lc-smc-val">{{ stats.lessons_started }}</div>
+        <div class="lc-smc-label">Started</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-check-circle-fill lc-smc-icon text-success"></i>
+        <div class="lc-smc-val">{{ stats.lessons_completed }}</div>
+        <div class="lc-smc-label">Completed</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-lightning-charge-fill lc-smc-icon text-warning"></i>
+        <div class="lc-smc-val">{{ stats.exercises_completed }}</div>
+        <div class="lc-smc-label">Exercises</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-star-fill lc-smc-icon" style="color:var(--lc-accent2);"></i>
+        <div class="lc-smc-val">{{ student.xp }}</div>
+        <div class="lc-smc-label">Total XP</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- XP Chart -->
+    <div class="col-lg-7">
+      <div class="lc-card h-100">
+        <div class="lc-card-header">
+          <i class="bi bi-bar-chart-fill me-2 text-primary"></i>XP Activity (Last 7 Days)
+        </div>
+        <div class="lc-card-body">
+          <canvas id="xpChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress by Language -->
+    <div class="col-lg-5">
+      <div class="lc-card h-100">
+        <div class="lc-card-header">
+          <i class="bi bi-translate me-2 text-success"></i>Progress by Language
+        </div>
+        <div class="lc-card-body">
+          {% for lang in langs %}
+          {% set total = lang.lessons | length %}
+          {% if total > 0 %}
+          {% set done = lang.lessons | selectattr('id', 'in', completed_ids) | list | length %}
+          {% set pct = ((done / total) * 100) | round | int %}
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <div class="d-flex align-items-center gap-2">
+                <img src="{{ url_for('static', filename='imgs/' + lang.id + '.svg') }}"
+                     onerror="this.src='{{ url_for('static', filename='imgs/default.svg') }}'"
+                     width="20" height="20" alt="{{ lang.name }}" />
+                <span class="fw-semibold" style="font-size:0.9rem;">{{ lang.name }}</span>
+              </div>
+              <span class="text-muted" style="font-size:0.82rem;">{{ done }}/{{ total }}</span>
+            </div>
+            <div class="lc-xp-progress">
+              <div class="progress-bar bg-primary" role="progressbar"
+                   style="width: {{ pct }}%;" aria-valuenow="{{ pct }}"
+                   aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+          {% endif %}
+          {% else %}
+          <p class="text-muted mb-0">No languages available.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Lesson progress table -->
+    <div class="col-12">
+      <div class="lc-card">
+        <div class="lc-card-header">
+          <i class="bi bi-list-check me-2"></i>Lesson Progress
+        </div>
+        <div class="lc-card-body p-0">
+          <div class="table-responsive">
+            <table class="table lc-lessons-table mb-0">
+              <thead>
+                <tr>
+                  <th>Language</th>
+                  <th>Lesson</th>
+                  <th>Status</th>
+                  <th>XP Earned</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% set ns = namespace(found=false) %}
+                {% for lang in langs %}
+                  {% for lesson in lang.lessons %}
+                    {% if lesson.id in started_ids %}
+                    {% set ns.found = true %}
+                    <tr class="{{ 'lc-row-done' if lesson.id in completed_ids else 'lc-row-started' }}">
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <img src="{{ url_for('static', filename='imgs/' + lang.id + '.svg') }}"
+                               onerror="this.src='{{ url_for('static', filename='imgs/default.svg') }}'"
+                               width="18" height="18" />
+                          <span class="text-muted" style="font-size:0.85rem;">{{ lang.name }}</span>
+                        </div>
+                      </td>
+                      <td class="fw-semibold">{{ lesson.title }}</td>
+                      <td>
+                        {% if lesson.id in completed_ids %}
+                        <span class="badge bg-success-subtle text-success">
+                          <i class="bi bi-check-circle-fill me-1"></i>Completed
+                        </span>
+                        {% else %}
+                        <span class="badge bg-warning-subtle text-warning">
+                          <i class="bi bi-clock me-1"></i>In Progress
+                        </span>
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if lesson.id in completed_ids %}
+                        <span class="text-success fw-semibold">+{{ lesson.xp }} XP</span>
+                        {% else %}
+                        <span class="text-muted">—</span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+                {% if not ns.found %}
+                <tr>
+                  <td colspan="4" class="text-muted text-center py-4">No lessons started yet.</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews left by student -->
+    {% if reviews %}
+    <div class="col-lg-6">
+      <div class="lc-card">
+        <div class="lc-card-header">
+          <i class="bi bi-star-fill me-2 text-warning"></i>Reviews Left by Student
+        </div>
+        <div class="lc-card-body">
+          {% for r in reviews %}
+          <div class="lc-review-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-semibold small">{{ r.lesson_id }}</span>
+              <div class="d-flex align-items-center gap-1">
+                <span class="text-warning small">{% for i in range(r.rating) %}★{% endfor %}</span>
+                {% if r.sentiment is not none %}
+                  {% if r.sentiment == 1 %}
+                  <span class="lc-review-sentiment lc-sentiment-positive">Positive</span>
+                  {% else %}
+                  <span class="lc-review-sentiment lc-sentiment-negative">Negative</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </div>
+            {% if r.comment %}
+            <p class="text-muted small mb-0 mt-1">{{ r.comment }}</p>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Recent XP log -->
+    {% if recent_xp %}
+    <div class="{{ 'col-lg-6' if reviews else 'col-12' }}">
+      <div class="lc-card">
+        <div class="lc-card-header">
+          <i class="bi bi-clock-history me-2"></i>Recent XP Activity
+        </div>
+        <div class="lc-card-body">
+          {% for log in recent_xp %}
+          <div class="lc-xp-log-item">
+            <span class="lc-xp-log-reason">{{ log.reason }}</span>
+            <span class="text-success fw-semibold">+{{ log.amount }}</span>
+            <span class="lc-xp-log-date">{{ log.created_at.strftime('%b %d') }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const xpData = {{ xp_chart | safe }};
+const ctx = document.getElementById('xpChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: xpData.map(d => d.day),
+    datasets: [{
+      label: 'XP',
+      data: xpData.map(d => d.xp),
+      backgroundColor: 'rgba(99,102,241,0.25)',
+      borderColor: '#6366f1',
+      borderWidth: 2,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: { color: 'rgba(0,0,0,0.06)' },
+        ticks: { color: '#64748b', font: { size: 11 } }
+      },
+      x: {
+        grid: { display: false },
+        ticks: { color: '#64748b', font: { size: 11 } }
+      }
+    }
+  }
+});
+</script>
+{% endblock %}

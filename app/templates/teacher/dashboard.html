@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block title %}Teacher Dashboard — LearnCode{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+      <h3 class="fw-bold mb-1"><i class="bi bi-person-badge me-2 text-warning"></i>Teacher Dashboard</h3>
+      <p class="text-muted mb-0">Manage languages, lessons and exercises</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="{{ url_for('teacher.students') }}" class="btn lc-btn-outline">
+        <i class="bi bi-people me-2"></i>Students
+      </a>
+      <a href="{{ url_for('teacher.new_language') }}" class="btn lc-btn-primary">
+        <i class="bi bi-plus-circle me-2"></i>New Language
+      </a>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-5">
+    <div class="col-md-4">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-translate lc-smc-icon text-primary"></i>
+        <div class="lc-smc-val">{{ langs | length }}</div>
+        <div class="lc-smc-label">Languages</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-book-fill lc-smc-icon text-success"></i>
+        <div class="lc-smc-val">{{ total_lessons }}</div>
+        <div class="lc-smc-label">Total Lessons</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-people-fill lc-smc-icon text-warning"></i>
+        <div class="lc-smc-val">{{ total_lessons }}</div>
+        <div class="lc-smc-label">Published</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Languages & Lessons -->
+  {% for lang in langs %}
+  <div class="lc-card mb-4">
+    <div class="lc-card-header d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-3">
+        <img src="{{ url_for('static', filename='imgs/' + lang.id + '.svg') }}"
+             onerror="this.src='{{ url_for('static', filename='imgs/default.svg') }}'"
+             width="28" height="28" alt="{{ lang.name }}" />
+        <span class="fw-bold">{{ lang.name }}</span>
+        <span class="badge bg-secondary-subtle text-muted">{{ lang.lessons | length }} lessons</span>
+      </div>
+      <a href="{{ url_for('teacher.new_lesson', lang_id=lang.id) }}" class="btn btn-sm lc-btn-primary">
+        <i class="bi bi-plus me-1"></i>Add Lesson
+      </a>
+    </div>
+    <div class="lc-card-body">
+      {% if lang.lessons %}
+      <div class="table-responsive">
+        <table class="table lc-lessons-table mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Exercises</th>
+              <th>XP</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for lesson in lang.lessons | sort(attribute='order') %}
+            <tr>
+              <td class="text-muted">{{ lesson.order }}</td>
+              <td class="fw-semibold">{{ lesson.title }}</td>
+              <td>
+                <span class="badge bg-secondary-subtle text-secondary">
+                  {{ lesson.exercises | length }} ex.
+                </span>
+              </td>
+              <td><span class="text-success fw-semibold">+{{ lesson.xp }}</span></td>
+              <td>
+                <a href="{{ url_for('teacher.edit_lesson', lang_id=lang.id, lesson_id=lesson.id) }}"
+                   class="btn btn-sm btn-outline-primary me-1">
+                  <i class="bi bi-pencil me-1"></i>Edit
+                </a>
+                <form method="POST"
+                      action="{{ url_for('teacher.delete_lesson', lang_id=lang.id, lesson_id=lesson.id) }}"
+                      class="d-inline"
+                      onsubmit="return confirm('Delete this lesson?')">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-trash me-1"></i>Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-muted mb-0">No lessons yet.
+        <a href="{{ url_for('teacher.new_lesson', lang_id=lang.id) }}">Add the first one →</a>
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  {% else %}
+  <div class="text-center py-5 text-muted">
+    <i class="bi bi-folder-plus fs-1 d-block mb-3"></i>
+    <p>No languages yet. <a href="{{ url_for('teacher.new_language') }}">Create your first language →</a></p>
+  </div>
+  {% endfor %}
+
+</div>
+{% endblock %}
