@@ -1,0 +1,224 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard — LearnCode{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- Welcome Banner -->
+  <div class="lc-welcome-banner mb-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div>
+        <h4 class="fw-bold mb-1">
+          Welcome back, {{ current_user.username }}! 👋
+        </h4>
+        <p class="mb-0 text-muted">
+          Level:
+          <span class="badge lc-badge-level-{{ current_user.level }}">
+            {{ current_user.level | capitalize if current_user.level else 'Unassigned' }}
+          </span>
+        </p>
+      </div>
+      <div class="text-end">
+        <div class="lc-xp-display">
+          <i class="bi bi-star-fill me-1 text-warning"></i>
+          <span class="fw-bold fs-4">{{ current_user.xp }}</span>
+          <span class="text-muted ms-1">XP</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-book-half lc-smc-icon text-primary"></i>
+        <div class="lc-smc-val">{{ stats.lessons_started }}</div>
+        <div class="lc-smc-label">Started</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-check-circle-fill lc-smc-icon text-success"></i>
+        <div class="lc-smc-val">{{ stats.lessons_completed }}</div>
+        <div class="lc-smc-label">Completed</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-lightning-charge-fill lc-smc-icon text-warning"></i>
+        <div class="lc-smc-val">{{ stats.exercises_completed }}</div>
+        <div class="lc-smc-label">Exercises</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="lc-stat-mini-card">
+        <i class="bi bi-star-fill lc-smc-icon text-danger"></i>
+        <div class="lc-smc-val">{{ current_user.xp }}</div>
+        <div class="lc-smc-label">Total XP</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- XP Chart -->
+    <div class="col-lg-7">
+      <div class="lc-card h-100">
+        <div class="lc-card-header">
+          <i class="bi bi-bar-chart-fill me-2 text-primary"></i>XP This Week
+        </div>
+        <div class="lc-card-body">
+          <canvas id="xpChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Donut -->
+    <div class="col-lg-5">
+      <div class="lc-card h-100">
+        <div class="lc-card-header">
+          <i class="bi bi-pie-chart-fill me-2 text-success"></i>Progress
+        </div>
+        <div class="lc-card-body d-flex flex-column align-items-center justify-content-center">
+          <canvas id="progressChart" width="200" height="200"></canvas>
+          <p class="text-muted small mt-3 mb-0">
+            {{ stats.lessons_completed }} completed /
+            {{ stats.lessons_started }} started
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ML Suggested Lessons -->
+  {% if ml_suggestions %}
+  <div class="mt-4">
+    <h5 class="fw-bold mb-3"><i class="bi bi-cpu me-2 text-primary"></i>Recommended For You</h5>
+    <div class="row g-3">
+      {% for item in ml_suggestions %}
+      <div class="col-md-4">
+        <div class="lc-lesson-card lc-lesson-card--recommended">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <img src="{{ url_for('static', filename='imgs/' + item.lang.id + '.svg') }}"
+                 onerror="this.src='{{ url_for('static', filename='imgs/default.svg') }}'"
+                 width="24" height="24" alt="{{ item.lang.name }}" />
+            <span class="text-muted small">{{ item.lang.name }}</span>
+          </div>
+          <h6 class="fw-semibold mb-2">{{ item.lesson.title }}</h6>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <span class="badge bg-primary-subtle text-primary">
+              <i class="bi bi-star me-1"></i>{{ item.lesson.xp }} XP
+            </span>
+            <a href="{{ url_for('main.lesson', lang_id=item.lang.id, lesson_id=item.lesson.id) }}"
+               class="btn btn-sm lc-btn-primary">Start →</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- All Suggested Lessons -->
+  <div class="mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="fw-bold mb-0"><i class="bi bi-compass me-2 text-warning"></i>Continue Learning</h5>
+      <a href="{{ url_for('main.learn') }}" class="btn btn-sm btn-outline-secondary">View All →</a>
+    </div>
+    <div class="row g-3">
+      {% for item in suggested %}
+      <div class="col-md-6 col-lg-4">
+        <div class="lc-lesson-card">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <img src="{{ url_for('static', filename='imgs/' + item.lang.id + '.svg') }}"
+                 onerror="this.src='{{ url_for('static', filename='imgs/default.svg') }}'"
+                 width="24" height="24" alt="{{ item.lang.name }}" />
+            <span class="text-muted small">{{ item.lang.name }}</span>
+            {% if item.lesson.id in started_ids %}
+            <span class="badge bg-warning-subtle text-warning ms-auto small">In Progress</span>
+            {% endif %}
+          </div>
+          <h6 class="fw-semibold mb-2">{{ item.lesson.title }}</h6>
+          <p class="text-muted small mb-3">{{ item.lesson.content[:80] }}...</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="badge bg-success-subtle text-success">
+              <i class="bi bi-star me-1"></i>{{ item.lesson.xp }} XP
+            </span>
+            <a href="{{ url_for('main.lesson', lang_id=item.lang.id, lesson_id=item.lesson.id) }}"
+               class="btn btn-sm lc-btn-outline">
+              {{ 'Continue' if item.lesson.id in started_ids else 'Start' }} →
+            </a>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12">
+        <div class="alert alert-success">
+          <i class="bi bi-trophy-fill me-2"></i>
+          You've completed all available lessons! 🎉 Check back soon for more.
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // XP Bar Chart
+  const xpData = {{ xp_chart | safe }};
+  const xpCtx = document.getElementById('xpChart').getContext('2d');
+  new Chart(xpCtx, {
+    type: 'bar',
+    data: {
+      labels: xpData.map(d => d.day),
+      datasets: [{
+        label: 'XP Earned',
+        data: xpData.map(d => d.xp),
+        backgroundColor: 'rgba(99, 102, 241, 0.7)',
+        borderColor: 'rgba(99, 102, 241, 1)',
+        borderWidth: 2,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // Progress Donut
+  const completed = {{ stats.lessons_completed }};
+  const started = {{ stats.lessons_started }};
+  const notStarted = Math.max(0, started - completed);
+  const progCtx = document.getElementById('progressChart').getContext('2d');
+  new Chart(progCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Completed', 'In Progress'],
+      datasets: [{
+        data: [completed || 0, notStarted || (completed === 0 ? 1 : 0)],
+        backgroundColor: ['#22c55e', '#f59e0b'],
+        borderWidth: 3,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: false,
+      cutout: '65%',
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+</script>
+{% endblock %}

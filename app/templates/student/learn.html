@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block title %}Learn — LearnCode{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1">All Languages</h3>
+      <p class="text-muted mb-0">Pick a language and start a lesson</p>
+    </div>
+    <span class="badge lc-badge-level-{{ current_user.level }} fs-6">
+      {{ current_user.level | capitalize if current_user.level else 'No level' }}
+    </span>
+  </div>
+
+  {% for lang in langs %}
+  <div class="lc-card mb-4">
+    <!-- Language Header -->
+    <div class="lc-card-header d-flex align-items-center gap-3">
+      <img src="{{ url_for('static', filename='imgs/' + lang.id + '.svg') }}"
+           onerror="this.src='{{ url_for('static', filename='imgs/default.svg') }}'"
+           width="32" height="32" alt="{{ lang.name }}" />
+      <div>
+        <span class="fw-bold fs-5">{{ lang.name }}</span>
+        <span class="text-muted ms-2 small">{{ lang.lessons | length }} lessons</span>
+      </div>
+    </div>
+    <div class="lc-card-body">
+      <p class="text-muted mb-4">{{ lang.description }}</p>
+
+      <!-- Lessons Table -->
+      <div class="table-responsive">
+        <table class="table lc-lessons-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Lesson</th>
+              <th>Exercises</th>
+              <th>XP</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for lesson in lang.lessons | sort(attribute='order') %}
+            <tr class="{% if lesson.id in completed_ids %}lc-row-done{% elif lesson.id in started_ids %}lc-row-started{% endif %}">
+              <td class="text-muted">{{ lesson.order }}</td>
+              <td>
+                <span class="fw-semibold">{{ lesson.title }}</span>
+              </td>
+              <td>
+                <span class="badge bg-secondary-subtle text-secondary">
+                  {{ lesson.exercises | length }} ex.
+                </span>
+              </td>
+              <td>
+                <span class="text-success fw-semibold">+{{ lesson.xp }}</span>
+              </td>
+              <td>
+                {% if lesson.id in completed_ids %}
+                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Done</span>
+                {% elif lesson.id in started_ids %}
+                <span class="badge bg-warning text-dark"><i class="bi bi-play-circle me-1"></i>Started</span>
+                {% else %}
+                <span class="badge bg-secondary-subtle text-muted">Not started</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{{ url_for('main.lesson', lang_id=lang.id, lesson_id=lesson.id) }}"
+                   class="btn btn-sm {% if lesson.id in completed_ids %}btn-outline-success{% else %}lc-btn-primary{% endif %}">
+                  {% if lesson.id in completed_ids %}
+                    <i class="bi bi-arrow-repeat me-1"></i>Review
+                  {% elif lesson.id in started_ids %}
+                    <i class="bi bi-play-fill me-1"></i>Continue
+                  {% else %}
+                    <i class="bi bi-play-fill me-1"></i>Start
+                  {% endif %}
+                </a>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-muted text-center py-3">No lessons yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+  {% else %}
+  <div class="text-center text-muted py-5">
+    <i class="bi bi-folder-x fs-1 d-block mb-3"></i>
+    No languages available yet. Check back soon!
+  </div>
+  {% endfor %}
+
+</div>
+{% endblock %}

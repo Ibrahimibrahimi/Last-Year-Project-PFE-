@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% block title %}Profile — LearnCode{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row g-4">
+
+    <!-- Profile Card -->
+    <div class="col-lg-4">
+      <div class="lc-card text-center">
+        <div class="lc-card-body py-4">
+          <div class="lc-avatar-wrap mx-auto mb-3">
+            <i class="bi bi-person-circle lc-avatar-icon"></i>
+          </div>
+          <h4 class="fw-bold mb-1">{{ current_user.username }}</h4>
+          <p class="text-muted small mb-2">{{ current_user.email }}</p>
+          <span class="badge lc-badge-level-{{ current_user.level }} mb-3 fs-6">
+            {{ current_user.level | capitalize if current_user.level else 'No level' }}
+          </span>
+          <div class="lc-xp-bar-wrap mt-3">
+            <div class="d-flex justify-content-between mb-1">
+              <small class="text-muted">Total XP</small>
+              <small class="fw-bold text-warning">{{ current_user.xp }} XP</small>
+            </div>
+            <div class="progress lc-xp-progress">
+              <div class="progress-bar bg-warning"
+                   style="width: {{ [current_user.xp % 100, 100] | min }}%"></div>
+            </div>
+          </div>
+          <p class="text-muted small mt-3">
+            {{ current_user.bio or 'No bio yet.' }}
+          </p>
+          <p class="text-muted small mb-0">
+            <i class="bi bi-calendar3 me-1"></i>
+            Joined {{ current_user.created_at.strftime('%B %Y') }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="lc-card mt-4">
+        <div class="lc-card-header"><i class="bi bi-bar-chart me-2"></i>My Stats</div>
+        <div class="lc-card-body">
+          <div class="lc-stat-row">
+            <span><i class="bi bi-book me-2 text-primary"></i>Lessons Started</span>
+            <strong>{{ current_user.total_lessons_started() }}</strong>
+          </div>
+          <div class="lc-stat-row">
+            <span><i class="bi bi-check-circle me-2 text-success"></i>Lessons Completed</span>
+            <strong>{{ current_user.total_lessons_completed() }}</strong>
+          </div>
+          <div class="lc-stat-row">
+            <span><i class="bi bi-lightning-charge me-2 text-warning"></i>Total XP</span>
+            <strong class="text-warning">{{ current_user.xp }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile + XP History -->
+    <div class="col-lg-8">
+
+      <!-- Edit Form -->
+      <div class="lc-card mb-4">
+        <div class="lc-card-header"><i class="bi bi-pencil-square me-2"></i>Edit Profile</div>
+        <div class="lc-card-body">
+          <form method="POST" action="{{ url_for('main.profile') }}">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Username</label>
+              <input type="text" name="username" class="form-control lc-input"
+                     value="{{ current_user.username }}" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Bio</label>
+              <textarea name="bio" class="form-control lc-input" rows="3"
+                        placeholder="Tell us about yourself...">{{ current_user.bio or '' }}</textarea>
+            </div>
+            <button type="submit" class="btn lc-btn-primary">
+              <i class="bi bi-save me-2"></i>Save Changes
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Recent XP Activity -->
+      <div class="lc-card">
+        <div class="lc-card-header"><i class="bi bi-clock-history me-2 text-warning"></i>Recent XP Activity</div>
+        <div class="lc-card-body">
+          {% if recent_xp %}
+          <ul class="list-unstyled mb-0">
+            {% for log in recent_xp %}
+            <li class="lc-xp-log-item">
+              <span class="lc-xp-log-reason">{{ log.reason }}</span>
+              <span class="lc-xp-log-amount text-success fw-bold">+{{ log.amount }} XP</span>
+              <span class="lc-xp-log-date text-muted small">
+                {{ log.created_at.strftime('%d %b, %H:%M') }}
+              </span>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="text-muted mb-0">No XP activity yet. Start learning to earn points!</p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

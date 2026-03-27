@@ -1,0 +1,343 @@
+{% extends "layout.html" %}
+{% block title %}{{ lesson.title }} — LearnCode{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row g-4">
+
+    <!-- Main Content -->
+    <div class="col-lg-8">
+
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb lc-breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('main.learn') }}">Learn</a></li>
+          <li class="breadcrumb-item">{{ lang.name }}</li>
+          <li class="breadcrumb-item active">{{ lesson.title }}</li>
+        </ol>
+      </nav>
+
+      <!-- Lesson Header -->
+      <div class="lc-lesson-header mb-4">
+        <div class="d-flex align-items-center gap-3 mb-2">
+          <img src="{{ url_for('static', filename='imgs/' + lang.id + '.svg') }}"
+               onerror="this.src='{{ url_for('static', filename='imgs/default.svg') }}'"
+               width="36" height="36" alt="{{ lang.name }}" />
+          <span class="text-muted">{{ lang.name }}</span>
+          <span class="badge bg-success-subtle text-success ms-auto">
+            <i class="bi bi-star me-1"></i>{{ lesson.xp }} XP
+          </span>
+          {% if prog.completed %}
+          <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Completed</span>
+          {% endif %}
+        </div>
+        <h2 class="fw-bold">{{ lesson.title }}</h2>
+      </div>
+
+      <!-- Lesson Content -->
+      <div class="lc-card mb-4">
+        <div class="lc-card-header"><i class="bi bi-journal-text me-2"></i>Explanation</div>
+        <div class="lc-card-body">
+          <p class="lc-lesson-content">{{ lesson.content }}</p>
+        </div>
+      </div>
+
+      <!-- Code Example -->
+      {% if lesson.code_example %}
+      <div class="lc-card mb-4">
+        <div class="lc-card-header d-flex justify-content-between align-items-center">
+          <span><i class="bi bi-code-slash me-2"></i>Code Example</span>
+          <button class="btn btn-sm btn-outline-secondary" onclick="copyCode(this)" data-code="{{ lesson.code_example | e }}">
+            <i class="bi bi-clipboard me-1"></i>Copy
+          </button>
+        </div>
+        <div class="lc-card-body p-0">
+          <pre class="lc-code-block m-0"><code>{{ lesson.code_example }}</code></pre>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Exercises -->
+      {% if lesson.exercises %}
+      <h5 class="fw-bold mb-3"><i class="bi bi-lightning-charge me-2 text-warning"></i>Exercises</h5>
+
+      {% for exercise in lesson.exercises %}
+      <div class="lc-card mb-3 lc-exercise-card {% if exercise.id in completed_exercises %}lc-exercise-done{% endif %}"
+           id="ex-{{ exercise.id }}">
+        <div class="lc-card-header d-flex justify-content-between align-items-center">
+          <div>
+            <span class="badge
+              {% if exercise.difficulty == 'easy' %}bg-success
+              {% elif exercise.difficulty == 'medium' %}bg-warning text-dark
+              {% else %}bg-danger{% endif %} me-2">
+              {{ exercise.difficulty | capitalize }}
+            </span>
+            <span class="badge bg-primary-subtle text-primary">
+              <i class="bi bi-star me-1"></i>{{ exercise.xp }} XP
+            </span>
+          </div>
+          {% if exercise.id in completed_exercises %}
+          <span class="text-success fw-semibold small"><i class="bi bi-check-circle-fill me-1"></i>Done</span>
+          {% endif %}
+        </div>
+        <div class="lc-card-body">
+          <p class="fw-semibold mb-3">{{ exercise.question }}</p>
+
+          <!-- MCQ -->
+          {% if exercise.type == 'mcq' %}
+          <div class="lc-mcq-options" id="mcq-{{ exercise.id }}">
+            {% for opt in exercise.options %}
+            <label class="lc-option-label {% if exercise.id in completed_exercises %}lc-option-disabled{% endif %}">
+              <input type="radio" name="mcq_{{ exercise.id }}" value="{{ opt }}"
+                     class="lc-radio-input"
+                     {% if exercise.id in completed_exercises %}disabled{% endif %} />
+              <span class="lc-option-text">{{ opt }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          {% if exercise.id not in completed_exercises %}
+          <button class="btn btn-sm lc-btn-primary mt-3"
+                  onclick="submitMCQ('{{ exercise.id }}', '{{ lang.id }}', '{{ lesson.id }}')">
+            <i class="bi bi-check2 me-1"></i>Submit Answer
+          </button>
+          {% endif %}
+
+          <!-- Code Exercise -->
+          {% else %}
+          <textarea class="form-control lc-code-textarea font-mono mb-3"
+                    id="code-{{ exercise.id }}"
+                    rows="5"
+                    placeholder="{{ exercise.starter_code }}"
+                    {% if exercise.id in completed_exercises %}disabled{% endif %}
+          >{{ exercise.starter_code if exercise.id not in completed_exercises else '# Exercise completed ✓' }}</textarea>
+          {% if exercise.id not in completed_exercises %}
+          <div class="d-flex gap-2 flex-wrap">
+            <button class="btn btn-sm lc-btn-primary"
+                    onclick="submitCode('{{ exercise.id }}', '{{ lang.id }}', '{{ lesson.id }}')">
+              <i class="bi bi-play-fill me-1"></i>Submit
+            </button>
+            {% if exercise.hints %}
+            <button class="btn btn-sm btn-outline-warning"
+                    onclick="showHint('{{ exercise.id }}')">
+              <i class="bi bi-lightbulb me-1"></i>Hint
+            </button>
+            {% endif %}
+          </div>
+          {% endif %}
+          {% endif %}
+
+          <!-- Hint Box -->
+          {% if exercise.hints %}
+          <div class="lc-hint-box d-none mt-3" id="hint-{{ exercise.id }}">
+            <i class="bi bi-lightbulb-fill text-warning me-2"></i>
+            {{ exercise.hints[0] }}
+          </div>
+          {% endif %}
+
+          <!-- Feedback -->
+          <div class="lc-feedback mt-3 d-none" id="feedback-{{ exercise.id }}"></div>
+        </div>
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      <!-- Complete Lesson Button -->
+      {% if not prog.completed %}
+      <div class="text-center mt-4">
+        <button class="btn lc-btn-primary btn-lg" id="completeLessonBtn"
+                onclick="completeLesson('{{ lang.id }}', '{{ lesson.id }}')">
+          <i class="bi bi-check-circle me-2"></i>Mark as Completed (+{{ lesson.xp }} XP)
+        </button>
+      </div>
+      {% else %}
+      <div class="alert alert-success text-center mt-4">
+        <i class="bi bi-trophy-fill me-2"></i>
+        Lesson completed! You earned <strong>{{ prog.xp_earned }} XP</strong>.
+      </div>
+      {% endif %}
+
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+
+      <!-- Reviews -->
+      <div class="lc-card mb-4">
+        <div class="lc-card-header"><i class="bi bi-star-fill me-2 text-warning"></i>Reviews
+          {% if avg_rating %}
+          <span class="badge bg-warning text-dark ms-2">{{ avg_rating }} ★</span>
+          {% endif %}
+        </div>
+        <div class="lc-card-body">
+          {% if not user_review %}
+          <form method="POST" action="{{ url_for('main.add_review', lang_id=lang.id, lesson_id=lesson.id) }}">
+            <label class="form-label fw-semibold small">Your Rating</label>
+            <div class="lc-star-rating mb-3" id="starRating">
+              {% for i in range(1, 6) %}
+              <i class="bi bi-star lc-star" data-val="{{ i }}" onclick="setRating({{ i }})"></i>
+              {% endfor %}
+            </div>
+            <input type="hidden" name="rating" id="ratingInput" value="0" />
+            <textarea name="comment" class="form-control lc-input mb-3"
+                      rows="3" placeholder="Write your review..."></textarea>
+            <button type="submit" class="btn btn-sm lc-btn-primary w-100">
+              <i class="bi bi-send me-1"></i>Submit Review
+            </button>
+          </form>
+          {% else %}
+          <div class="mb-3">
+            <div class="lc-stars-display mb-1">
+              {% for i in range(1, 6) %}
+              <i class="bi bi-star{% if i <= user_review.rating %}-fill text-warning{% endif %}"></i>
+              {% endfor %}
+            </div>
+            <p class="text-muted small mb-0">{{ user_review.comment or 'No comment.' }}</p>
+          </div>
+          {% endif %}
+
+          <!-- Other reviews -->
+          {% for r in all_reviews %}
+          {% if r.user_id != current_user.id %}
+          <div class="lc-review-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-semibold small">{{ r.user.username }}</span>
+              <div class="d-flex align-items-center gap-1">
+                <span class="text-warning small">
+                  {% for i in range(r.rating) %}★{% endfor %}
+                </span>
+                {% if r.sentiment is not none %}
+                  {% if r.sentiment == 1 %}
+                  <span class="lc-review-sentiment lc-sentiment-positive">😊 Positive</span>
+                  {% else %}
+                  <span class="lc-review-sentiment lc-sentiment-negative">😞 Negative</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </div>
+            {% if r.comment %}
+            <p class="text-muted small mb-0">{{ r.comment }}</p>
+            {% endif %}
+          </div>
+          {% endif %}
+          {% endfor %}
+
+          {% if not all_reviews %}
+          <p class="text-muted small mb-0">No reviews yet. Be the first!</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- XP Toast (hidden by default) -->
+      <div class="lc-xp-toast d-none" id="xpToast">
+        <i class="bi bi-star-fill text-warning me-2"></i>
+        <span id="xpToastMsg">+10 XP earned!</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Star Rating
+  function setRating(val) {
+    document.getElementById('ratingInput').value = val;
+    document.querySelectorAll('.lc-star').forEach((s, i) => {
+      s.className = i < val ? 'bi bi-star-fill lc-star text-warning' : 'bi bi-star lc-star';
+    });
+  }
+
+  // Copy Code
+  function copyCode(btn) {
+    const code = btn.getAttribute('data-code');
+    navigator.clipboard.writeText(code).then(() => {
+      btn.innerHTML = '<i class="bi bi-check me-1"></i>Copied!';
+      setTimeout(() => btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy', 2000);
+    });
+  }
+
+  // Show Hint
+  function showHint(exId) {
+    const hintBox = document.getElementById('hint-' + exId);
+    hintBox.classList.toggle('d-none');
+  }
+
+  // Show XP Toast
+  function showXPToast(msg) {
+    const toast = document.getElementById('xpToast');
+    document.getElementById('xpToastMsg').textContent = msg;
+    toast.classList.remove('d-none');
+    toast.classList.add('lc-xp-toast--show');
+    setTimeout(() => {
+      toast.classList.add('d-none');
+      toast.classList.remove('lc-xp-toast--show');
+    }, 3000);
+  }
+
+  // Submit MCQ
+  function submitMCQ(exId, langId, lessonId) {
+    const selected = document.querySelector(`input[name="mcq_${exId}"]:checked`);
+    if (!selected) { alert('Please select an answer.'); return; }
+
+    fetch(`/exercise/${langId}/${lessonId}/${exId}/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answer: selected.value })
+    })
+    .then(r => r.json())
+    .then(data => {
+      const fb = document.getElementById('feedback-' + exId);
+      fb.classList.remove('d-none');
+      if (data.correct) {
+        fb.innerHTML = `<div class="alert alert-success mb-0"><i class="bi bi-check-circle-fill me-2"></i>Correct! +${data.xp} XP</div>`;
+        showXPToast(`+${data.xp} XP earned!`);
+        document.getElementById('ex-' + exId).classList.add('lc-exercise-done');
+        document.querySelectorAll(`input[name="mcq_${exId}"]`).forEach(i => i.disabled = true);
+      } else if (data.already) {
+        fb.innerHTML = `<div class="alert alert-info mb-0">Already completed.</div>`;
+      } else {
+        fb.innerHTML = `<div class="alert alert-danger mb-0"><i class="bi bi-x-circle-fill me-2"></i>Incorrect. Try again!</div>`;
+      }
+    });
+  }
+
+  // Submit Code
+  function submitCode(exId, langId, lessonId) {
+    const code = document.getElementById('code-' + exId).value;
+    fetch(`/exercise/${langId}/${lessonId}/${exId}/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answer: code })
+    })
+    .then(r => r.json())
+    .then(data => {
+      const fb = document.getElementById('feedback-' + exId);
+      fb.classList.remove('d-none');
+      if (data.correct) {
+        fb.innerHTML = `<div class="alert alert-success mb-0"><i class="bi bi-check-circle-fill me-2"></i>Correct! +${data.xp} XP</div>`;
+        showXPToast(`+${data.xp} XP earned!`);
+        document.getElementById('ex-' + exId).classList.add('lc-exercise-done');
+        document.getElementById('code-' + exId).disabled = true;
+      } else if (data.already) {
+        fb.innerHTML = `<div class="alert alert-info mb-0">Already completed.</div>`;
+      } else {
+        fb.innerHTML = `<div class="alert alert-danger mb-0"><i class="bi bi-x-circle-fill me-2"></i>Not quite right. Check the hint!</div>`;
+      }
+    });
+  }
+
+  // Complete Lesson
+  function completeLesson(langId, lessonId) {
+    fetch(`/lesson/${langId}/${lessonId}/complete`, { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        showXPToast(`+${data.xp} XP — Lesson completed!`);
+        document.getElementById('completeLessonBtn').outerHTML =
+          `<div class="alert alert-success text-center"><i class="bi bi-trophy-fill me-2"></i>Lesson completed! You earned <strong>${data.xp} XP</strong>.</div>`;
+      }
+    });
+  }
+</script>
+{% endblock %}
